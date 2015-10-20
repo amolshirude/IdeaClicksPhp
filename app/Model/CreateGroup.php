@@ -15,26 +15,29 @@ var $useTable = 'create_group';
 
 
 function validation($data) {
+//    echo "<pre>"."hi";
+//        print_r($data);
+//        die();
         $errorString = '';
-        if ($this->isEmpty(trim($data['CreateGroup']['group_name'])) == '') {
+        if ($this->isEmpty(trim($data['group_name'])) == '') {
             $errorString.='<li>Invalid Group Name.</li>';
         }
-        if ($this->isEmpty(trim($data['CreateGroup']['group_code'])) == '') {
+        if ($this->isEmpty(trim($data['group_code'])) == '') {
             $errorString.='<li>Invalid Group Code.</li>';
         }
-        if ($this->isEmpty(trim($data['CreateGroup']['group_type'])) == '') {
+        if ($this->isEmpty(trim($data['group_type'])) == '') {
             $errorString.='<li>Invalid Group Type.</li>';
         }
-        if ($this->isEmpty(trim($data['CreateGroup']['group_admin_email'])) == '') {
+        if ($this->isEmpty(trim($data['group_admin_email'])) == '') {
             $errorString.='<li>Invalid Email.</li>';
         }
-        if ($this->isEmpty(trim($data['CreateGroup']['password'])) == '') {
+        if ($this->isEmpty(trim($data['password'])) == '') {
             $errorString.='<li>Invalid Password.</li>';
         }
-        if ($this->isEmpty(trim($data['CreateGroup']['c_password'])) == '') {
+        if ($this->isEmpty(trim($data['c_password'])) == '') {
             $errorString.='<li>Invalid Password.</li>';
         }
-        
+//        echo "<pre>";print_r($errorString); die();
         return $errorString;
     }
 function isEmpty($check) {
