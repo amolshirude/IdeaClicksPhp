@@ -1,6 +1,6 @@
 <html>
 <head>
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
 <style>
     header {
         background-color:black;
@@ -101,45 +101,19 @@
 </head>
 <body>
 <header>
-<h3>Create Group</h3>
+<h3>User Registration</h3>
 </header>
-
-<nav>
-    <div align="left"><h3>Group name ( Group Code )</h3></div>
-    <marquee direction="up" height="350">
-        <?php foreach ($groupNameListWithGroupCode AS $arr => $value): ?>
-            <div align="left"><?php echo $value; ?></div>    
-        <?php endforeach; ?>
-    </marquee>
-</nav>
 
 <section>
     
+    <form name="userRegistration" action='userRegistration' method="post">
 
-    <?php
-        $message = '';
-        $message = $this->Session->read('message');
-        if ($message == "Registration successful"){
-            echo '<div> <h3 style="color: #008000">';
-            echo $message;
-            echo '</h3></div>';
-        }
-        else{
-            echo '<div> <h3 style="color: #FF0000">';
-            echo $message;
-            echo '</h3></div>';
-        }
-   ?>
-
-    <form name="CreateGroup" action='register' method="post">
-
-        <label>Group Name:</label><input type="text" name="group_name" id="group_name" placeholder="Group Name" style="width:350px" required/>
-        <label>Group code:</label><input type="text" name="group_code" id="group_code" placeholder="Group Code" style="width:350px" required/>
-        <label>Group Type:</label><?php echo $this->Form->input('GroupListWithCode', array('options' => $groupListWithCode, 'label' => false, 'empty' => '-- Select Type--', 'id' => 'group_type', 'name' => 'group_type', 'style' => 'width:350px')); ?>
-        <label>Email Id:</label><input type="email"  name="group_admin_email" id="email_id" placeholder="Email Id" style="width:350px" required/>
-        <label>Password:</label> <input id="password" name="password" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" style="width:350px" required>
-        <label>Confirm Password:</label> <input id="cpassword" name="c_password" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" style="width:350px" required>
-        <p><input type="checkbox" id="field_terms" onchange="this.setCustomValidity(validity.valueMissing ? 'Please indicate that you accept the Terms and Conditions' : '');" name="check" value="check" required >I accept <a href="termsandcondition">Terms and Conditions</a></p>
+        <label>Full Name</label><b style="color: red;">*</b>:<br><input type="text" name="user_name" id="group_name" placeholder="Group Name" style="width:350px" required/><br>
+        <label>Email Id</label><b style="color: red;">*</b>:<br><input type="email"  name="user_email" id="email_id" placeholder="Email Id" style="width:350px" required/><br>
+        <label>Password</label><b style="color: red;">*</b>:<br><input id="password" name="password" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" style="width:350px" required><br>
+        <label>Confirm Password</label><b style="color: red;">*</b>:<br><input id="cpassword" name="c_password" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" style="width:350px" required><br>
+        <label>Mobile:</label><br><input type="tel" name="user_mobile" style="width:350px"><br>
+        <p><input type="checkbox" id="field_terms" onchange="this.setCustomValidity(validity.valueMissing ? 'Please indicate that you accept the Terms and Conditions' : '');" name="check" value="check" required >I accept <a href="..\Admin\termsandcondition">Terms and Conditions</a></p>
         <input type="submit" id="submit" value="Register" />
     </form>
 </section>
