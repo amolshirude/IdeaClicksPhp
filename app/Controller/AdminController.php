@@ -11,7 +11,7 @@ class AdminController extends AppController {
 
     /* Display no of groups on create group page */
 
-    public function creategroup() {
+    public function create_group() {
         $this->layout = '';
 
         $this->displayGroupType();

@@ -216,7 +216,15 @@
  *
  */
 	Configure::write('Session', array(
-		'defaults' => 'php'
+		'defaults' => 'php',
+                'timeout' => 30, // The session will timeout after 5 minutes of inactivity
+                'cookieTimeout' => 720, // 720The session cookie will live for at most 12 hours, this does not effect session timeouts
+                'checkAgent' => false,
+                'autoRegenerate' => true
+//    ,
+//    'ini' => array(
+//        'session.cookie_secure' => true,
+//        'session.cookie_httponly' => true)
 	));
 
 /**

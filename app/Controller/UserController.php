@@ -25,7 +25,7 @@ class UserController extends AppController {
                 $userInfo = $this->User->find('first', array(
             'conditions' => array('User.user_id' => 1)));
         $this->set('userInfo', $userInfo);
-        
+
         $this->loadModel('GetRegisteredGroupData');
         $group_info = $this->GetRegisteredGroupData->find('all', array(
             'order' => array('GetRegisteredGroupData.group_name' => 'asc')));
@@ -40,7 +40,6 @@ class UserController extends AppController {
         }
 
         $this->set('groupNameListWithGroupCode', $groupNameListWithGroupCode);
-        
     }
 
     /* post user registration */
@@ -100,13 +99,14 @@ class UserController extends AppController {
         $this->loadModel('User');
         $userId = trim($this->request->data['user_id']);
         $userName = trim($this->request->data['user_name']);
+        $gender = trim($this->request->data['gender']);
         $userAddress = trim($this->request->data['user_address']);
         $country = trim($this->request->data['country']);
         $state = trim($this->request->data['state']);
         $city = trim($this->request->data['city']);
         $pincode = trim($this->request->data['pincode']);
 
-        if ($this->User->updateAll(array('user_name' => "'$userName'", 'user_address' => "'$userAddress'",
+        if ($this->User->updateAll(array('user_name' => "'$userName'", 'gender' => "'$gender'", 'user_address' => "'$userAddress'",
                     'country' => "'$country'", 'state' => "'$state'", 'city' => "'$city'", 'pincode' => "'$pincode'"), array('user_id' => $userId))) {
             $this->Session->write('message', 'updated successful');
             $this->redirect('../User/change_password');
@@ -147,7 +147,32 @@ class UserController extends AppController {
             $this->redirect('../User/change_password');
         }
     }
+    /* captcha */
+    public function get_captcha() {
+        $this->autoRender = false;
+        App::import('Component', 'Captcha');
 
+        //generate random charcters for captcha
+        $random = mt_rand(100, 99999);
+
+        //save characters in session
+        $this->Session->write('captcha_code', $random);
+
+        $settings = array(
+            'characters' => $random,
+            'winHeight' => 50, // captcha image height 
+            'winWidth' => 220, // captcha image width
+            'fontSize' => 25, // captcha image characters fontsize 
+            'fontPath' => WWW_ROOT . 'tahomabd.ttf', // captcha image font
+            'noiseColor' => '#ccc',
+            'bgColor' => '#fff',
+            'noiseLevel' => '100',
+            'textColor' => '#000'
+        );
+
+        $img = $this->Captcha->ShowImage($settings);
+        echo $img;
+    }
 }
 
 ?>

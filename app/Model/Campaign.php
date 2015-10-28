@@ -10,9 +10,6 @@ var $useTable = 'campaign';
 
 
 function validation($data) {
-//    echo "<pre>"."hi";
-//        print_r($data);
-//        die();
         $errorString = '';
         if ($this->isEmpty(trim($data['campaign_name'])) == '') {
             $errorString.='<li>Invalid Campaign.</li>';
@@ -23,7 +20,6 @@ function validation($data) {
          if ($this->isEmpty(trim($data['end_date'])) == '') {
             $errorString.='<li>Invalid end date.</li>';
         }
-       //echo "<pre>";print_r($errorString); die();
         return $errorString;
     }
 function isEmpty($check) {

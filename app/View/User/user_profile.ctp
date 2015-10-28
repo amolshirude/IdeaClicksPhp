@@ -121,9 +121,12 @@
                     
                 </td>
                 <td bgcolor="#aaa" align="left" width="40%">
-                    <form name="updateProfile" action='updateProfile' method="post">
+                    <form name="updateProfile" enctype="multipart/form-data" action='updateProfile' method="post">
                         <input type="hidden" name="user_id" value="<?php echo $userInfo['User']['user_id']; ?>"/>
+                        <input type="text" name="image" style="height: 100px;width: 85px"><br>
+                        <input type="file" name="profile_image"><br>
                         <label>Full Name</label>:<br><input type="text" name="user_name" id="user_name" placeholder="Full Name" value="<?php echo $userInfo['User']['user_name']; ?>" style="width:350px" /><br>
+                        <label>Gender:</label><select name="gender"><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select><br>
                         <label>Email Id</label>:<br><input type="email"  name="user_email" id="email_id" placeholder="Email Id" value="<?php echo $userInfo['User']['user_email']; ?>" style="width:350px" readonly="true"/><br>
                         <label>Mobile:</label><br><input type="tel" name="user_mobile" value="<?php echo $userInfo['User']['user_mobile']; ?>" placeholder="Mobile No" style="width:350px"><br>
                         <label>Address</label>:<br><input type="text" name="user_address" id="user_address" placeholder="Address" value="<?php echo $userInfo['User']['user_address']; ?>" style="height:100px ;width:350px" /><br><br>
