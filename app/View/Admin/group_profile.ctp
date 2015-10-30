@@ -34,7 +34,7 @@
         </div>
         <table width="100%" border="1">
             <tr valign="top">
-                <td bgcolor="#aaa" align="center" width="20%">
+                <td bgcolor="#aaa" align="center" width="30%">
                     <div>
                         <table>
                             <tr>
@@ -46,16 +46,47 @@
                             </tr>
                         </table> 
                     </div>
+                    <h3 align="left">Requests</h3>
+                    <div align="left">
+                        <table border="1">
+                            <tr>
+                                <th>Group code</th>
+                                <th>Status</th>
+                            </tr>
+                            <?php foreach ($joinGroupRequest as $row): ?> 
+                            <tr>
+                                <td><?php echo $row['JoinGroup']['group_code']; ?></td>
+                                <td>
+                                    <form name="joinGroupStatus" action="joinGroupStatus" method="post">
+                                        <input type="hidden" name="request_id" value="<?php echo $row['JoinGroup']['request_id']; ?>">
+                                        <input type="submit" name="button_value" value="Accept">
+                                        <input type="submit" name="button_value" value="Delete">
+                                    </form>
+                                </td> 
+                            </tr>
+                            <?php endforeach; ?>
+                        </table>
+                    </div>
                 </td>
                 <td bgcolor="#b5dcb3" height="220" width="40%">
                     <div>
                         <table align="left">
                             <tr>
                                 <td>
-                                    <form name="editGroupProfile" action="editGroupProfile" method="post">
+                                    <form name="editGroupProfile" enctype="multipart/form-data" action="editGroupProfile" method="post">
+                                        <input type="text" name="image" style="height: 100px;width: 85px"><br>
+                                        <input type="file" name="profile_image"><br>
                                         <label>Group Name:</label><br><input type="text" name="group_name" value="" id="group_name" style=" height:20px; width:200px "/><br>
                                         <label>Group Code :</label><br><input type="text" name="group_code" value="" id="group_code" style=" height:20px; width:200px"/><br>
-                                        <label>Group Type:</label><?php echo $this->Form->input('GroupListWithCode', array('options' => $groupListWithCode, 'label' => false, 'empty' => '-- Select Type--', 'id' => 'group_type', 'name' => 'group_type', 'style' => 'height:25px; width:200px')); ?>
+                                        <label>Group Type:</label><br>
+                                        <select name="ideas_category" style=" height:20px; width:200px" >
+                                            <option value="">Select Group Type</option>
+                                            <?php foreach ($groupTypes as $row): ?>
+                                                <option value ="<?php echo $row['SelectGroupType']['type']; ?>">
+                                                    <?php echo $row['SelectGroupType']['type']; ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select><br>
                                         <label>Email Id:</label><br><input type="email" name="group_admin_email" id="email_id" style="height:20px; width:200px" required/><br>
                                         <label>Contact No:</label><br><input type="tel" name="contact_no" id="contact_no" style="height:20px; width:200px" required/><br>
                                         <label>Address :</label><br><input type="text" name="contact_no" id="address" style="height:100px; width:200px"><br>
@@ -74,7 +105,7 @@
                         </table> 
                     </div>
                 </td>
-                <td bgcolor="#aaa" width="40%">
+                <td bgcolor="#aaa" width="30%">
                     <div align="center">
                         <form name="deleteGroup" action="deleteGroup" method="post">
                             <input type="hidden" name="group_id" value="<?php echo $group_id; ?>" />
@@ -158,13 +189,13 @@
                                         <?php echo $row['Campaign']['status']; ?>
                                     </th>
                                     <th>
-                                <form name="" action="" method="post">
+                                <form name="edit_campaign" action="edit_campaign" method="post">
                                     <input type="hidden" name="campaign_id" value="<?php echo $row['Campaign']['campaign_id']; ?>" />
-                                    <input type="submit" style="height:25px; width:60px; margin-left:20px; background-color: #0a0" value="Edit">
+                                    <input type="submit" value="Edit" style="height:25px; width:60px; margin-left:20px; background-color: #0a0" >
                                 </form>
                                 <form name="deleteCampaign" action="deleteCampaign" method="post">
                                     <input type="hidden" name="campaign_id" value="<?php echo $row['Campaign']['campaign_id']; ?>" />
-                                    <input type="submit" style="height:25px; width:60px; margin-left:20px; background-color: #0a0" value="Delete" onclick="return confirm('Are you sure you want to delete this campaign?')">
+                                    <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this campaign?')" style="height:25px; width:60px; margin-left:20px; background-color: #0a0" >
                                 </form>
                                 </th>
                                 </tr>

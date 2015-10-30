@@ -7,7 +7,7 @@
         <title>login</title>
         <style>
             header {
-                background-color:black;
+                background-color:#819FF7;
                 color:white;
                 text-align:right;
                 padding:2px; 
@@ -26,7 +26,9 @@
                             <input type="submit" value="login">
                         </form>
                         </div>
-                         <a href="../Password/forget_password"><b style="color: #ffffff">forget password?</b></a>
+                        <a href="../Pages/about_us"><b style="color: #ffffff">About Us</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="../Pages/contact_us"><b style="color: #ffffff">Contact Us</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                         <a href="../Password/forget_password"><b style="color: #ffffff">Forgot password ?</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </td>
                 </tr>
             </table>
@@ -36,8 +38,9 @@
             <table border="1" align="center">
                 <tr>
                     <td bgcolor="#819FF7" align="center" height="220" width="30%">
-                        <a  class="btn btn-info" role="button" href="../Admin/create_group"><b style="color: #ffffff" >Idea Invitor</b></a>
-                        <a  class="btn btn-info" role="button" href="../User/user_registration"><b style="color: #ffffff" >Idea Submitter</b></a>
+                        <h3>I am interested in :</h3>
+                        <a  class="btn btn-info" role="button" href="../Admin/create_group"><b style="color: #ffffff" >Inviting Ideas</b></a>
+                        <a  class="btn btn-info" role="button" href="../User/user_registration"><b style="color: #ffffff" >Submitting Ideas</b></a>
                     </td>
                 </tr>
             </table>

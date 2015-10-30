@@ -133,13 +133,13 @@
 		        	 <?php foreach ($allIdeas as $row): ?>
 					<div class="idea-container">
                                                 <label>Title:</label>
-						<a class="idea-tile" href="like_dislike_comment"><?php echo $row['IdeasModel']['ideas_title']; ?></a> <br>
+						<a class="idea-tile" value="<?php echo $row['IdeasModel']['idea_id']; ?>" href="like_dislike_comment"><?php echo $row['IdeasModel']['idea_title']; ?></a> <br>
 						<label>Description:</label>
-                                                <pre class="idea-description"><?php echo $row['IdeasModel']['ideas_description']; ?></pre>
+                                                <pre class="idea-description"><?php echo $row['IdeasModel']['idea_description']; ?></pre>
 						<br>
 						<div class="idea-details-container">
 							<label>Category:</label>
-							<span class="category"> <?php echo $row['IdeasModel']['ideas_category']; ?> </span> <br>
+							<span class="category"> <?php echo $row['IdeasModel']['idea_category']; ?> </span> <br>
                                                         <label>submitted by:</label>
 							<span class="submit-by"></span>
                                                 </div>	

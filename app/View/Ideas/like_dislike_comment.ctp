@@ -1,14 +1,26 @@
 <html>
-  <head>
+    <head>
         <title>View Ideas</title>
         <style type="text/css">
+            header {
+                background-color:black;
+                color:white;
+                text-align:center;
+                padding:1px; 
+            }
+            footer {
+                background-color:black;
+                color:white;
+                text-align:left;
+                padding:1px; 
+            }
             .box {
                 font-size: 15px;
                 font-family: 'Titillium Web', sans-serif;
                 color :#000000;
             }
             .view-idea-container {
-                width: 70%;
+                width: 100%;
                 float: left;
                 display: inline-block;
                 clear: both;
@@ -19,11 +31,12 @@
             }
 
             .idea-container {
+                background-color: #b5dcb3;
                 border: solid;
                 border-width: 2px;
                 border-color: #0094BC;
                 border-radius: 10px;
-                padding: 10px;
+                padding: 12px;
             }
 
             .idea-container a.idea-tile {
@@ -126,38 +139,48 @@
             }
         </style>
     </head>
-<body>
-  <div class="box" style="margin-left: auto; margin-right: auto;">
-		
-			<div class="view-idea-container">
-		        	 
-					<div class="idea-container">
-                                                <label>Title:</label>
-						<span class="idea-description"> <?php echo $Idea['IdeasModel']['ideas_title']; ?></span> <br>
-						<label>Description:</label>
-                                                <pre class="idea-description"><?php echo $Idea['IdeasModel']['ideas_description']; ?></pre>
-						<br>
-						<div class="idea-details-container">
-							<label>Category:</label>
-							<span class="category"> <?php echo $Idea['IdeasModel']['ideas_category']; ?> </span> <br>
-                                                        <label>submitted by:</label>
-							<span class="submit-by"></span>
-                                                </div><br>	
-                                                <div>
-                                                    <form name="edit_idea" action="edit_idea" method="post">
-                                                        <input type="hidden" name="ideas_id" value="<?php echo $Idea['IdeasModel']['ideas_id']; ?>" /> 
-                                                        <input type="submit" value="Edit">
-                                                    </form>
-                                                    <form name="deleteIdea" action="deleteIdea" method="post">
-                                                        <input type="hidden" name="ideas_id" value="<?php echo $Idea['IdeasModel']['ideas_id']; ?>" />
-                                                        <input type="submit" value="Delete">
-                                                    </form>
-                                               </div>
-                                        </div>
-                   </div>
-	</div>
-	<!-- end of main -->   
+    <body>
+        <header>
+            <h3>Like Dislike and Comments on Idea</h3>
+            <?php echo $this->element('../Pages/header1'); ?>
+        </header><br>
 
-</body>
+        <div class="box" style="margin-left: auto; margin-right: auto;">
+
+            <div class="view-idea-container">
+
+                <div class="idea-container">
+                    <label>Title:</label>
+                    <span class="idea-description"> <?php echo $Idea['IdeaModel']['idea_title']; ?></span> <br>
+                    <label>Description:</label>
+                    <pre class="idea-description"><?php echo $Idea['IdeaModel']['idea_description']; ?></pre>
+                    <br>
+                    <div class="idea-details-container">
+                        <label>Category:</label>
+                        <span class="category"> <?php echo $Idea['IdeaModel']['idea_category']; ?> </span> <br>
+                        <label>submitted by:</label>
+                        <span class="submit-by"></span>
+                    </div><br>	
+                    <div>
+                        <form name="edit_idea" action="edit_idea" method="post">
+                            <input type="hidden" name="idea_id" value="<?php echo $Idea['IdeaModel']['idea_id']; ?>" /> 
+                            <input type="submit" value="Edit">
+                        </form>
+                        <form name="deleteIdea" action="deleteIdea" method="post">
+                            <input type="hidden" name="idea_id" value="<?php echo $Idea['IdeaModel']['idea_id']; ?>" />
+                            <input type="submit" value="Delete">
+                        </form>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- end of main -->   
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <footer>
+            <?php echo $this->element('../Pages/footer1'); ?>
+        </footer>
+    </body>
 
 </html>

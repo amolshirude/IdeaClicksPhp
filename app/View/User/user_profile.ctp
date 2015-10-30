@@ -8,6 +8,12 @@
                 text-align:center;
                 padding:1px; 
             }
+            footer {
+                background-color:black;
+                color:white;
+                text-align:left;
+                padding:1px; 
+            }
             nav {
                 line-height:30px;
                 height:420px;
@@ -20,6 +26,7 @@
                 float:left;
                 padding:10px; 
             }
+
         </style>
 
         <script type="text/javascript">
@@ -101,24 +108,42 @@
     <body>
         <header>
             <h3>User profile</h3>
+            <?php echo $this->element('../Pages/header1'); ?>
         </header>
-
-
         <table width="100%" border="1">
             <tr valign="top">
                 <td bgcolor="#b5dcb3" height="200" width="30%">
-                    <div align="left"><h4>Group name ( Group Code )</h4>
-                    <div>
-                    <nav>
-                        <marquee direction="up" height="250">
-                            <?php foreach ($groupNameListWithGroupCode AS $arr => $value): ?>
-                                <div align="left"><?php echo $value; ?></div>    
+                 <div align="left">
+                        <h3> Join Group </h3>
+                        <form name="joinGroup" action="joinGroup" method="post">
+                            <label>Group Code:</label>
+                            <select name="group_code" style="height: 30px;width: 120px" required>
+                                <option value="">Select Group</option>
+                                <?php foreach ($groupInfo as $row): ?>
+                                    <option value ="<?php echo $row['GetRegisteredGroupData']['group_code']; ?>">
+                                        <?php echo $row['GetRegisteredGroupData']['group_code']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <input type="submit" value="Join" style="height: 30px;width: 70px;">
+                        </form>
+                    </div>
+                    <h3 align="left">Request Status</h3>
+                    <div align="left">
+                        <table border="1">
+                            <tr>
+                                <th>Group code</th>
+                                <th>Status</th>
+                            </tr>
+                            <?php foreach ($joinGroupRequest as $row): ?> 
+                            <tr>
+                                <td><?php echo $row['JoinGroup']['group_code']; ?></td>
+                                <td><?php echo $row['JoinGroup']['status']; ?></td> 
+                            </tr>
                             <?php endforeach; ?>
-                        </marquee>
-                            </div>
-                    </nav>
-                    </div><br>
-                    
+                        </table>
+                    </div>   
+
                 </td>
                 <td bgcolor="#aaa" align="left" width="40%">
                     <form name="updateProfile" enctype="multipart/form-data" action='updateProfile' method="post">
@@ -126,7 +151,7 @@
                         <input type="text" name="image" style="height: 100px;width: 85px"><br>
                         <input type="file" name="profile_image"><br>
                         <label>Full Name</label>:<br><input type="text" name="user_name" id="user_name" placeholder="Full Name" value="<?php echo $userInfo['User']['user_name']; ?>" style="width:350px" /><br>
-                        <label>Gender:</label><select name="gender"><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select><br>
+                        <label>Gender:</label><select name="gender"><option><?php echo $userInfo['User']['gender']; ?><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option></select><br>
                         <label>Email Id</label>:<br><input type="email"  name="user_email" id="email_id" placeholder="Email Id" value="<?php echo $userInfo['User']['user_email']; ?>" style="width:350px" readonly="true"/><br>
                         <label>Mobile:</label><br><input type="tel" name="user_mobile" value="<?php echo $userInfo['User']['user_mobile']; ?>" placeholder="Mobile No" style="width:350px"><br>
                         <label>Address</label>:<br><input type="text" name="user_address" id="user_address" placeholder="Address" value="<?php echo $userInfo['User']['user_address']; ?>" style="height:100px ;width:350px" /><br><br>
@@ -148,16 +173,11 @@
                             <input type="submit" value="Invite" style="height: 30px;width: 100px; margin-left: 60px">
                         </form>
                     </div>
-                    <div align="left">
-                    <h3> Join Group </h3>
-                    <form name="joinGroup" action="#" method="post">
-                        <label>Group Code:</label><input type="text" name="invite_user" style="height: 30px;width: 100px" required>
-                        <input type="submit" value="Join" style="height: 30px;width: 70px;">
-                    </form>
-                    </div>
+                    
                 </td>
             </tr>
         </table>
-
-    </body>
+    <footer>
+        <?php echo $this->element('../Pages/footer1'); ?>
+   </footer>
 </html>

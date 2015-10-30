@@ -15,3 +15,5 @@
  */
 ?>
 <?php echo $this->fetch('content'); ?>
+<?php echo $content_for_layout; ?>
+<?php echo $javascript->link('jquery-1.3.2');?>

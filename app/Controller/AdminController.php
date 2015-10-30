@@ -6,7 +6,53 @@ class AdminController extends AppController {
 
     public $uses = array();
 
-    public function termsandcondition() {   
+    /* View Profile- Display group categories and campaigns */
+
+    public function group_profile() {
+        $this->layout = '';
+        $curtm = date(" H:i:s", time());
+        //date('Y-m-d H:i:s');
+        $todaydate = date("d/m/Y", strtotime($curtm));
+//        echo "<pre>";
+//        print_r($curtm);
+//        die();
+        //set group_id in session for delete group.
+        $session_group_id = 1;
+        $this->set('group_id', $session_group_id);
+
+        // display group type
+        $this->displayGroupType();
+        // display group categories
+        $this->loadModel('Category');
+        $groupcategories = $this->Category->find('all', array(
+            'order' => array('Category.category_name' => 'asc')));
+
+        foreach ($groupcategories AS $arr => $value) {
+
+            $db_category_id = trim($value['Category']['category_id']);
+            $db_category_name = trim($value['Category']['category_name']);
+            $groupCateoriesList[$db_category_id] = $db_category_name;
+        }
+
+        $this->set('groupCateoriesList', $groupCateoriesList);
+
+        // display group campaign
+        $this->loadModel('Campaign');
+        $groupcampaigns = $this->Campaign->find('all');
+        $this->set('groupCampaignsList', $groupcampaigns);
+
+        //display join group request
+        $session_group_code = '3dplm';
+
+        $this->loadModel('JoinGroup');
+        $joinGroupRequest = $this->JoinGroup->find('all', array(
+            'conditions' => array('group_code' => $session_group_code)));
+
+        $this->set('joinGroupRequest', $joinGroupRequest);
+    }
+
+    public function termsandcondition() {
+        
     }
 
     /* Display no of groups on create group page */
@@ -20,16 +66,7 @@ class AdminController extends AppController {
         $group_info = $this->GetRegisteredGroupData->find('all', array(
             'order' => array('GetRegisteredGroupData.group_name' => 'asc')));
 
-        foreach ($group_info AS $arr => $value) {
-
-            $groupid = trim($value['GetRegisteredGroupData']['group_id']);
-            $groupname = trim($value['GetRegisteredGroupData']['group_name']);
-            $groupcode = trim($value['GetRegisteredGroupData']['group_code']);
-            $groupnamecode = $groupname . ' ( ' . $groupcode . ' )';
-            $groupNameListWithGroupCode[$groupid] = $groupnamecode;
-        }
-
-        $this->set('groupNameListWithGroupCode', $groupNameListWithGroupCode);
+        $this->set('groupInfo', $group_info);
     }
 
     function register() {
@@ -67,59 +104,21 @@ class AdminController extends AppController {
                                 'group_type' => $grouptype, 'group_admin_email' => $groupadminemail,
                                 'password' => $password, 'c_password' => $cpassword))) {
                         $this->Session->write('message', 'Registration successful');
-                        $this->redirect('../Admin/creategroup');
+                        $this->redirect('../Admin/create_group');
                     } else {
                         $this->Session->write('message', 'Registration unsuccessful');
                         $this->Session->delete($name);
-                        $this->redirect('../Admin/creategroup');
+                        $this->redirect('../Admin/create_group');
                     }
                 } else {
                     $this->Session->write('message', 'Already registered');
-                    $this->redirect('../Admin/creategroup');
+                    $this->redirect('../Admin/create_group');
                 }
             }
         } else {
             $this->Session->setFlash($error);
             //$this->redirect('../Admin/creategroup');
         }
-    }
-
-    /* View Profile- Display group categories and campaigns */
-
-    public function group_profile() {
-        $this->layout = '';
-        $curtm = date(" H:i:s", time());
-        //date('Y-m-d H:i:s');
-        $todaydate = date("d/m/Y", strtotime($curtm));
-//        echo "<pre>";
-//        print_r($curtm);
-//        die();
-        //set group_id in session for delete group.
-        $session_group_id = 1;
-        $this->set('group_id', $session_group_id);
-
-        // display group type
-        $this->displayGroupType();
-        // display group categories
-        $this->loadModel('Category');
-        $groupcategories = $this->Category->find('all', array(
-            'order' => array('Category.category_name' => 'asc')));
-
-        foreach ($groupcategories AS $arr => $value) {
-
-            $db_category_id = trim($value['Category']['category_id']);
-            $db_category_name = trim($value['Category']['category_name']);
-            $groupCateoriesList[$db_category_id] = $db_category_name;
-        }
-//        echo "<pre>";
-//        print_r($groupLsitWithCode);
-//        die();
-        $this->set('groupCateoriesList', $groupCateoriesList);
-
-        // display group campaign
-        $this->loadModel('Campaign');
-        $groupcampaigns = $this->Campaign->find('all');
-        $this->set('groupCampaignsList', $groupcampaigns);
     }
 
     /* Edit Profile */
@@ -266,8 +265,14 @@ class AdminController extends AppController {
 
     /* Edit campaign */
 
-    public function editCampaign() {
-        
+    public function edit_campaign() {
+        $this->layout = ''; 
+        $this->loadModel('Campaign');
+        $campaign_id = trim($this->request->data['campaign_id']);
+        $campaign = $this->Campaign->find('first', array(
+        'conditions' => array('Campaign.campaign_id' => $campaign_id)));
+         
+        $this->set('Campaign', $campaign);
     }
 
     /* Display group type in dropdown list */
@@ -275,19 +280,9 @@ class AdminController extends AppController {
     public function displayGroupType() {
 
         $this->loadModel('SelectGroupType');
-        $group_type = $this->SelectGroupType->find('all');
+        $group_types = $this->SelectGroupType->find('all');
 
-        $groupTypeList = array();
-        foreach ($group_type AS $arr => $value) {
-//           print_r($value);
-            $groupid = trim($value['SelectGroupType']['id']);
-            $grouptype = trim($value['SelectGroupType']['type']);
-            $groupTypeList[$groupid] = $grouptype;
-        }
-//        echo "<pre>";
-//        print_r($groupLsitWithCode);
-//        die();
-        $this->set('groupListWithCode', $groupTypeList);
+        $this->set('groupTypes', $group_types);
     }
 
     /* set campaign status */
@@ -295,6 +290,24 @@ class AdminController extends AppController {
     public function campaignStatus() {
         $curtm = date('Y-m-d H:i:s');
         $todaydate = date("d/m/Y", strtotime($curtm));
+    }
+
+    public function joinGroupStatus() {
+        $this->loadModel('JoinGroup');
+        $requestId = trim($this->request->data['request_id']);
+        $buttonValue = trim($this->request->data['button_value']);
+
+        if ($buttonValue == 'Accept') {
+            
+        } else {
+            if ($this->JoinGroup->delete(array('request_id' => $requestId))) {
+                $this->Session->write('message', 'User Request has been deleted');
+                $this->redirect('../Admin/group_profile');
+            } else {
+                $this->Session->write('message', 'User Request not deleted');
+                $this->redirect('../Admin/group_profile');
+            }
+        }
     }
 
 }

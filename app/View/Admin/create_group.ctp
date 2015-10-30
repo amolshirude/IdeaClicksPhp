@@ -1,147 +1,168 @@
 <html>
-<head>
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-<style>
-    header {
-        background-color:black;
-        color:white;
-        text-align:center;
-        padding:1px; 
-    }
-    nav {
-        line-height:30px;
-        background-color:#eeeeee;
-        height:420px;
-        width:200px;
-        float:right;
-        padding:5px; 
-    }
-    section {
-        width:350px;
-        float:left;
-        padding:10px; 
-    }
-</style>
-
-<script type="text/javascript">
-
-    document.addEventListener("DOMContentLoaded", function() {
-
-        // JavaScript form validation
-
-        var checkPassword = function(str)
-        {
-            var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
-            return re.test(str);
-        };
-
-        var checkForm = function(e)
-        {
-            if(this.password.value != "" && this.password.value == this.c_password.value) {
-                if(!checkPassword(this.password.value)) {
-                    alert("The password you have entered is not valid!");
-                    this.password.focus();
-                    e.preventDefault();
-                    return;
-                }
-            } else {
-                alert("Error: Please check that you've entered and confirmed your password!");
-                this.password.focus();
-                e.preventDefault();
-                return;
+    <head>
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <style>
+            header {
+                background-color:black;
+                color:white;
+                text-align:center;
+                padding:1px; 
             }
-        };
+            footer {
+                 background-color:black;
+                color:white;
+                text-align:left;
+                padding:1px; 
+            }
+            nav {
+                line-height:30px;
+                background-color:#eeeeee;
+                height:420px;
+                width:200px;
+                float:right;
+                padding:5px; 
+            }
+            section {
+                width:350px;
+                float:left;
+                padding:10px; 
+            }
+        </style>
 
-        var myForm = document.getElementById("myForm");
-        myForm.addEventListener("submit", checkForm, true);
+        <script type="text/javascript">
 
-        // HTML5 form validation
+            document.addEventListener("DOMContentLoaded", function() {
 
-        var supports_input_validity = function()
-        {
-            var i = document.createElement("input");
-            return "setCustomValidity" in i;
-        }
+                // JavaScript form validation
 
-        if(supports_input_validity()) {
-            var usernameInput = document.getElementById("field_username");
-            usernameInput.setCustomValidity(usernameInput.title);
+                var checkPassword = function(str)
+                {
+                    var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+                    return re.test(str);
+                };
 
-            var passwordInput = document.getElementById("password");
-            passwordInput.setCustomValidity(passwordInput.title);
+                var checkForm = function(e)
+                {
+                    if(this.password.value != "" && this.password.value == this.c_password.value) {
+                        if(!checkPassword(this.password.value)) {
+                            alert("The password you have entered is not valid!");
+                            this.password.focus();
+                            e.preventDefault();
+                            return;
+                        }
+                    } else {
+                        alert("Error: Please check that you've entered and confirmed your password!");
+                        this.password.focus();
+                        e.preventDefault();
+                        return;
+                    }
+                };
 
-            var c_passwordInput = document.getElementById("cpassword");
+                var myForm = document.getElementById("myForm");
+                myForm.addEventListener("submit", checkForm, true);
 
-            // input key handlers
+                // HTML5 form validation
 
-            usernameInput.addEventListener("keyup", function() {
-                usernameInput.setCustomValidity(this.validity.patternMismatch ? usernameInput.title : "");
-            }, false);
-
-            passwordInput.addEventListener("keyup", function() {
-                this.setCustomValidity(this.validity.patternMismatch ? passwordInput.title : "");
-                if(this.checkValidity()) {
-                    c_passwordInput.pattern = this.value;
-                    c_passwordInput.setCustomValidity(c_passwordInput.title);
-                } else {
-                    c_passwordInput.pattern = this.pattern;
-                    c_passwordInput.setCustomValidity("");
+                var supports_input_validity = function()
+                {
+                    var i = document.createElement("input");
+                    return "setCustomValidity" in i;
                 }
+
+                if(supports_input_validity()) {
+                    var usernameInput = document.getElementById("field_username");
+                    usernameInput.setCustomValidity(usernameInput.title);
+
+                    var passwordInput = document.getElementById("password");
+                    passwordInput.setCustomValidity(passwordInput.title);
+
+                    var c_passwordInput = document.getElementById("cpassword");
+
+                    // input key handlers
+
+                    usernameInput.addEventListener("keyup", function() {
+                        usernameInput.setCustomValidity(this.validity.patternMismatch ? usernameInput.title : "");
+                    }, false);
+
+                    passwordInput.addEventListener("keyup", function() {
+                        this.setCustomValidity(this.validity.patternMismatch ? passwordInput.title : "");
+                        if(this.checkValidity()) {
+                            c_passwordInput.pattern = this.value;
+                            c_passwordInput.setCustomValidity(c_passwordInput.title);
+                        } else {
+                            c_passwordInput.pattern = this.pattern;
+                            c_passwordInput.setCustomValidity("");
+                        }
+                    }, false);
+
+                    c_passwordInput.addEventListener("keyup", function() {
+                        this.setCustomValidity(this.validity.patternMismatch ? c_passwordInput.title : "");
+                    }, false);
+
+                }
+
             }, false);
 
-            c_passwordInput.addEventListener("keyup", function() {
-                this.setCustomValidity(this.validity.patternMismatch ? c_passwordInput.title : "");
-            }, false);
+        </script>
+    </head>
+    <body>
+<div>
+        <header>
+            <h3>Create Group</h3>
 
-        }
+         <?php echo $this->element('../Pages/header2'); ?>
 
-    }, false);
+        </header>
+</div>
+        <nav>
+            <div align="left"><h3>Group name ( Group Code )</h3></div>
+            <marquee direction="up" height="250">
+                <?php foreach ($groupInfo as $row): ?>
+                    <div align="left"><?php echo $row['GetRegisteredGroupData']['group_name'] . ' ( ' . $row['GetRegisteredGroupData']['group_code'] . ' ) '; ?></div>    
+                <?php endforeach; ?>
+            </marquee>
+        </nav>
 
-</script>
-</head>
-<body>
-<header>
-<h3>Create Group</h3>
-</header>
+        <section>
 
-<nav>
-    <div align="left"><h3>Group name ( Group Code )</h3></div>
-    <marquee direction="up" height="350">
-        <?php foreach ($groupNameListWithGroupCode AS $arr => $value): ?>
-            <div align="left"><?php echo $value; ?></div>    
-        <?php endforeach; ?>
-    </marquee>
-</nav>
 
-<section>
-    
+            <?php
+            $message = '';
+            $message = $this->Session->read('message');
+            if ($message == "Registration successful") {
+                echo '<div> <h3 style="color: #008000">';
+                echo $message;
+                echo '</h3></div>';
+            } else {
+                echo '<div> <h3 style="color: #FF0000">';
+                echo $message;
+                echo '</h3></div>';
+            }
+            ?>
 
-    <?php
-        $message = '';
-        $message = $this->Session->read('message');
-        if ($message == "Registration successful"){
-            echo '<div> <h3 style="color: #008000">';
-            echo $message;
-            echo '</h3></div>';
-        }
-        else{
-            echo '<div> <h3 style="color: #FF0000">';
-            echo $message;
-            echo '</h3></div>';
-        }
-   ?>
+            <form name="register" action='register' method="post">
 
-    <form name="CreateGroup" action='register' method="post">
-
-        <label>Group Name:</label><input type="text" name="group_name" id="group_name" placeholder="Group Name" style="width:350px" required/>
-        <label>Group code:</label><input type="text" name="group_code" id="group_code" placeholder="Group Code" style="width:350px" required/>
-        <label>Group Type:</label><?php echo $this->Form->input('GroupListWithCode', array('options' => $groupListWithCode, 'label' => false, 'empty' => '-- Select Type--', 'id' => 'group_type', 'name' => 'group_type', 'style' => 'width:350px')); ?>
-        <label>Email Id:</label><input type="email"  name="group_admin_email" id="email_id" placeholder="Email Id" style="width:350px" required/>
-        <label>Password:</label> <input id="password" name="password" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" style="width:350px" required>
-        <label>Confirm Password:</label> <input id="cpassword" name="c_password" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" style="width:350px" required>
-        <p><input type="checkbox" id="field_terms" onchange="this.setCustomValidity(validity.valueMissing ? 'Please indicate that you accept the Terms and Conditions' : '');" name="check" value="check" required >I accept <a href="termsandcondition">Terms and Conditions</a></p>
-        <input type="submit" id="submit" value="Register" />
-    </form>
-</section>
-</body>
+                <label>Group Name:</label><input type="text" name="group_name" id="group_name" placeholder="Group Name" style="width:350px" required/>
+                <label>Group code:</label><input type="text" name="group_code" id="group_code" placeholder="Group Code" style="width:350px" required/>
+                <label>Group Type:</label><br>
+                <select name="group_type" style="width:350px" required>
+                    <option value="">Select Group Type</option>
+                    <?php foreach ($groupTypes as $row): ?>
+                        <option value ="<?php echo $row['SelectGroupType']['type']; ?>">
+                            <?php echo $row['SelectGroupType']['type']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select><br>
+                <label>Email Id:</label><input type="email"  name="group_admin_email" id="email_id" placeholder="Email Id" style="width:350px" required/>
+                <label>Password:</label> <input id="password" name="password" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" style="width:350px" required>
+                <label>Confirm Password:</label> <input id="cpassword" name="c_password" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" style="width:350px" required>
+                <p><input type="checkbox" id="field_terms" onchange="this.setCustomValidity(validity.valueMissing ? 'Please indicate that you accept the Terms and Conditions' : '');" name="check" value="check" required >I accept <a href="termsandcondition">Terms and Conditions</a></p>
+                <input type="submit" id="submit" value="Register" />
+            </form>
+        </section>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <footer>
+         <?php echo $this->element('../Pages/footer1'); ?>
+    </footer>
+    </body>
 </html>

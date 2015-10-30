@@ -21,25 +21,23 @@ class UserController extends AppController {
     public function user_profile() {
         $this->layout = '';
         $this->loadModel('User');
-        $user_id = //get user id from session;
-                $userInfo = $this->User->find('first', array(
-            'conditions' => array('User.user_id' => 1)));
+        $session_user_id = 1;//get user id from session
+        $userInfo = $this->User->find('first', array(
+            'conditions' => array('User.user_id' => $session_user_id)));
         $this->set('userInfo', $userInfo);
 
         $this->loadModel('GetRegisteredGroupData');
         $group_info = $this->GetRegisteredGroupData->find('all', array(
             'order' => array('GetRegisteredGroupData.group_name' => 'asc')));
 
-        foreach ($group_info AS $arr => $value) {
+        $this->set('groupInfo', $group_info);
+        
+        //display join group request
+        $this->loadModel('JoinGroup');
+        $joinGroupRequest = $this->JoinGroup->find('all',array(
+        'conditions' => array('user_id' => $session_user_id)));
 
-            $groupid = trim($value['GetRegisteredGroupData']['group_id']);
-            $groupname = trim($value['GetRegisteredGroupData']['group_name']);
-            $groupcode = trim($value['GetRegisteredGroupData']['group_code']);
-            $groupnamecode = $groupname . ' ( ' . $groupcode . ' )';
-            $groupNameListWithGroupCode[$groupid] = $groupnamecode;
-        }
-
-        $this->set('groupNameListWithGroupCode', $groupNameListWithGroupCode);
+        $this->set('joinGroupRequest', $joinGroupRequest);
     }
 
     /* post user registration */
@@ -137,7 +135,7 @@ class UserController extends AppController {
         if ($password == $cpassword) {
             if ($this->User->updateAll(array('password' => "'$password'"), array('user_id' => $userId))) {
                 $this->Session->write('message', 'password changed successfully');
-                $this->redirect('../Ideas/submit_ideas');
+                $this->redirect('../Ideas/submit_idea');
             } else {
                 $this->Session->write('message', 'Password not changed');
                 $this->redirect('../User/change_password');
@@ -147,7 +145,42 @@ class UserController extends AppController {
             $this->redirect('../User/change_password');
         }
     }
+
+    /* Join Group */
+
+    public function joinGroup() {
+        $this->loadModel('JoinGroup');
+        $result = $this->request->data;
+        $error = $this->JoinGroup->validation($result);
+
+        if ($error === '') {
+            $session_userId = 1;
+            $session_userName = 'Amol';
+            $sesion_userEmailId = 'amolshirude@gmail.com';
+            $groupCode = trim($this->request->data['group_code']);
+            $status = 'sent';
+
+            if (!empty($result)) {
+
+
+                if ($this->JoinGroup->save(array('user_id' => $session_userId,
+                    'user_name' => $session_userName,'user_email' => $sesion_userEmailId,
+                    'group_code' => $groupCode,'status' => $status))) {
+                    $this->Session->write('message', 'Request sent');
+                    $this->redirect('../User/user_profile');
+                } else {
+                    $this->Session->write('message', 'Please send request');
+                    $this->redirect('../User/user_profile');
+                }
+            }
+        } else {
+            $this->Session->setFlash($error);
+            //$this->redirect('../Admin/creategroup');
+        }
+    }
+
     /* captcha */
+
     public function get_captcha() {
         $this->autoRender = false;
         App::import('Component', 'Captcha');
@@ -173,6 +206,7 @@ class UserController extends AppController {
         $img = $this->Captcha->ShowImage($settings);
         echo $img;
     }
+
 }
 
 ?>

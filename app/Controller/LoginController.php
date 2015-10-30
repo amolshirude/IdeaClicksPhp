@@ -4,7 +4,7 @@ App::uses('AppController', 'Controller');
 
 class loginController extends AppController {
 
-    public function login() {
+    public function home() {
         $this->layout = '';
         $this->loadModel('Login');
     }
