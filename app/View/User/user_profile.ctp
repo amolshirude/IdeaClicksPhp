@@ -154,7 +154,7 @@
                         <label>Gender:</label><select name="gender"><option><?php echo $userInfo['User']['gender']; ?><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option></select><br>
                         <label>Email Id</label>:<br><input type="email"  name="user_email" id="email_id" placeholder="Email Id" value="<?php echo $userInfo['User']['user_email']; ?>" style="width:350px" readonly="true"/><br>
                         <label>Mobile:</label><br><input type="tel" name="user_mobile" value="<?php echo $userInfo['User']['user_mobile']; ?>" placeholder="Mobile No" style="width:350px"><br>
-                        <label>Address</label>:<br><input type="text" name="user_address" id="user_address" placeholder="Address" value="<?php echo $userInfo['User']['user_address']; ?>" style="height:100px ;width:350px" /><br><br>
+                        <label>Address</label>:<br><textarea name="user_address" id="user_address" placeholder="Address" value="<?php echo $userInfo['User']['user_address']; ?>" style="height:100px ;width:350px"></textarea><br><br>
                         <label>Country</label><label style="margin-left: 38%">State</label><br>
                         <select name="country" style="width: 40%"><option><?php echo $userInfo['User']['country']; ?></option><option>Select Country</option><option>India</option><option>USA</option></select>
                         <select name="state" style="width: 40%;margin-left: 7%"><option><?php echo $userInfo['User']['state']; ?></option><option>Select State</option><option>Maharashtra</option><option>Gujrat</option></select><br><br>

@@ -25,9 +25,15 @@
                 font-weight: bold;
             }
         </style>
+        <script type="text/javascript">
+            function check() {
+                if("<?php echo $Idea['IdeaModel']['idea_status']; ?>" == "private"){
+                document.getElementById("idea_status").checked = true;}
+}
+        </script>
         <title>update Idea</title>
     </head>
-    <body>
+    <body onload="check()">
         <header>
             <h3>Update Your Idea</h3>
              <?php echo $this->element('../Pages/header1'); ?>
@@ -39,14 +45,14 @@
             <form name="updateIdea" action="updateIdea" method="post">
                 <input type="hidden" name="idea_id" value="<?php echo $Idea['IdeaModel']['idea_id']; ?>"/>
                 <div class="box" style="margin-left: auto; margin-right: auto;">
-                    <label>Title</label><b style="color: red;">*</b>:<br><input type="text" name="idea_title" placeholder="Idea Title" value="<?php echo $Idea['IdeaModel']['idea_title']; ?>" style="height: 5%;width: 40%"required/><br>
+                    <label>Title</label><b style="color: red;">*</b>:<br><input type="text" name="idea_title" placeholder="Idea Title" value="<?php echo $Idea['IdeaModel']['idea_title']; ?>" style="height: 25px;width: 40%"required/><br>
                 </div><br>
                 <div class="box" style="margin-left: auto; margin-right: auto;">
-                    <label>Description</label><b style="color: red;">*</b>:<br><input type="textarea" placeholder="Idea Description" value="<?php echo $Idea['IdeaModel']['idea_description']; ?>" style="height: 150px;width: 40%" name="idea_description" required/><br>
+                    <label>Description</label><b style="color: red;">*</b>:<br><textarea placeholder="Idea Description" style="height: 150px;width: 40%" name="idea_description" required><?php echo $Idea['IdeaModel']['idea_description']; ?></textarea><br>
                 </div><br>
                 <div class="box" style="margin-left: auto; margin-right: auto;">
                     <label>Category</label><b style="color: red;">*</b>:<br>
-                    <select name="idea_category" style="height: 5%;width: 40%" required>
+                    <select name="idea_category" style="height: 25px;width: 40%" required>
                         <option value="<?php echo $Idea['IdeaModel']['idea_category']; ?>"><?php echo $Idea['IdeaModel']['idea_category']; ?></option>
                         <option value="">Select category</option>
                         <?php foreach ($groupCategoriesList as $row): ?>
@@ -57,11 +63,11 @@
                     </select>
                 </div><br>
                 <div class="button" style="margin-left: auto; margin-right: auto;">
-                    <input type="checkbox" name="idea_status" value="private">Confidential
+                    
+                    <input type="checkbox" name="idea_status" id="idea_status" value="private">Confidential
                 </div><br>
                 <div class="button" style="margin-left: auto; margin-right: auto;">
                     <input type="submit" value="Update">
-                    <input type="reset" value="Reset">
                 </div><br>
             </form>
         </div></td></table>

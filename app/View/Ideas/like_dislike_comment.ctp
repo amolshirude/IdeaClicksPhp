@@ -1,3 +1,16 @@
+<?php
+//echo $this->Html->meta('icon');
+//echo $this->fetch('meta');
+//echo $this->fetch('css');
+//echo $this->fetch('script');
+echo $this->Html->script('jquery.min');
+//echo $this->Html->css('style');
+//echo $this->Html->css('style_menu');
+//echo $this->Html->script('common');
+//echo $this->Html->script('datetimepicker_css');
+echo $this->Html->script('https://www.google.com/jsapi');
+//echo $this->Session->flash();
+?>
 <html>
     <head>
         <title>View Ideas</title>
@@ -138,13 +151,46 @@
                 float: right;
             }
         </style>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $('.i-comment').click(function(){
+                    var p1 = $(this).parent().get(0);
+                    $(p1).parent().find('.comment-container').eq(0).show();
+                    $(this).hide();
+                });
+                $( ".submitComment" ).click(function() 
+                { 
+                    var data = {commentText: $(this).closest('.comment-container').find('.comment-box').eq(0).val()},
+                    commentId=$(this).closest('.comment-container').find('.comment-id').eq(0).val();
+                    data.commentId=-1;
+                    
+                    if(commentId!="idea"){
+                        data.commentId = commentId;
+                    }
+                    console.log(data);
+                    
+                    jQuery.post('saveComment', {commentText:data}, function(data) {
+                        $("#comment").html(data);
+                    });
+                    //$(this).disable();
+                    //                    $.ajax({ 
+                    //                        url: "${saveComment}" , 
+                    //                        type: 'POST', 
+                    //                        datatype:'json', 
+                    //                        data: data, 
+                    //                        success: function(data){ 
+                    //                            console.log('success:save comment');	
+                    //                        } 
+                    //                    }); 
+                });
+            });
+        </script>
     </head>
     <body>
         <header>
-            <h3>Like Dislike and Comments on Idea</h3>
+            <h3>view Idea</h3>
             <?php echo $this->element('../Pages/header1'); ?>
         </header><br>
-
         <div class="box" style="margin-left: auto; margin-right: auto;">
 
             <div class="view-idea-container">
@@ -159,7 +205,7 @@
                         <label>Category:</label>
                         <span class="category"> <?php echo $Idea['IdeaModel']['idea_category']; ?> </span> <br>
                         <label>submitted by:</label>
-                        <span class="submit-by"></span>
+                        <span class="submit-by"><?php echo $Idea['IdeaModel']['submitted_by']; ?></span>
                     </div><br>	
                     <div>
                         <form name="edit_idea" action="edit_idea" method="post">
@@ -170,17 +216,36 @@
                             <input type="hidden" name="idea_id" value="<?php echo $Idea['IdeaModel']['idea_id']; ?>" />
                             <input type="submit" value="Delete">
                         </form>
-                       
+
+                    </div>
+
+                    <div id="like_dislike">
+                        <img id="like" src="../app/webroot/img/thumbs-up.png"/>
+                        <?php echo $Idea['IdeaModel']['like_count']; ?>
+                        <img id="dislike" src="../app/webroot/img/thumbs-down.png"/>
+                        <?php echo $Idea['IdeaModel']['dislike_count']; ?>
+
+                        <button type="button" class="i-comment" value="Comment">Comment</button>
+                        <div id="comment" class="box comment-container" style="margin-left: auto; margin-right: auto;display:none">
+                            <input type="hidden" value="idea" class="comment-id"/>
+                            <textarea class="comment-box" name="commentsText"
+                                      title="Submit Your comment"
+                                      style="width: 95%; height: 50px;"></textarea>
+
+                            <button id="commentsubmit"name="submit" value="submit" style="width:100px" class="submitComment">Submit</button>	
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- end of main -->   
-        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-        <footer>
-            <?php echo $this->element('../Pages/footer1'); ?>
-        </footer>
     </body>
-
 </html>
+<script>
+    $(document).ready(function () {
+        $("#like").click(function () {
+            var like_count = 9;
+            jQuery.post('like', {likecount:like_count}, function(data) {
+                $("#like_dislike").html(data);
+            });
+        });  
+    });
+</script>

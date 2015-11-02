@@ -2,6 +2,18 @@
     <head>
         <title>View Ideas</title>
         <style type="text/css">
+            header {
+                background-color:black;
+                color:white;
+                text-align:center;
+                padding:1px; 
+            }
+            footer {
+                background-color:black;
+                color:white;
+                text-align:left;
+                padding:1px; 
+            }
             .box {
                 font-size: 15px;
                 font-family: 'Titillium Web', sans-serif;
@@ -19,6 +31,7 @@
             }
 
             .idea-container {
+                background-color: #b5dcb3;
                 border: solid;
                 border-width: 2px;
                 border-color: #0094BC;
@@ -127,19 +140,23 @@
         </style>
     </head>
     <body>
+        <header>
+            <h3>view Idea</h3>
+            <?php echo $this->element('../Pages/header1'); ?>
+        </header><br>
         <div class="box" style="margin-left: auto; margin-right: auto;">
-		<form id="viewIdea" name="viewIdea" method="post" action="">
+		
 			<div class="view-idea-container">
 		        	 <?php foreach ($allIdeas as $row): ?>
 					<div class="idea-container">
                                                 <label>Title:</label>
-						<a class="idea-tile" value="<?php echo $row['IdeasModel']['idea_id']; ?>" href="like_dislike_comment"><?php echo $row['IdeasModel']['idea_title']; ?></a> <br>
+						<a class="idea-tile" value="<?php echo $row['IdeaModel']['idea_id']; ?>" href="like_dislike_comment"><?php echo $row['IdeaModel']['idea_title']; ?></a> <br>
 						<label>Description:</label>
-                                                <pre class="idea-description"><?php echo $row['IdeasModel']['idea_description']; ?></pre>
+                                                <pre class="idea-description"><?php echo $row['IdeaModel']['idea_description']; ?></pre>
 						<br>
 						<div class="idea-details-container">
 							<label>Category:</label>
-							<span class="category"> <?php echo $row['IdeasModel']['idea_category']; ?> </span> <br>
+							<span class="category"> <?php echo $row['IdeaModel']['idea_category']; ?> </span> <br>
                                                         <label>submitted by:</label>
 							<span class="submit-by"></span>
                                                 </div>	
@@ -159,14 +176,14 @@
 					<b>Categories</b>
 				</div>
 				<div class="categories-container">
-                                    
+                                    <a href="../Ideas/view_ideas">View all Ideas</a><br>
 					 <?php foreach ($groupCategoriesList as $row): ?>
-						<a class="category" href="#"><?php echo $row['Category']['category_name']; ?></a>
+						<a class="category" href="../Ideas/filter_ideas?category=<?php echo $row['Category']['category_name'];?>"><?php echo $row['Category']['category_name']; ?></a>
 						<br>
                                          <?php endforeach; ?>
 				</div>
 			</div>
-		</form>
+		
 	</div>
 	<!-- end of main -->
     </body>

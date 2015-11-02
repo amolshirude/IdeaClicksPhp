@@ -49,7 +49,7 @@
                             </div><br>
                             <div class="box" style="margin-left: auto; margin-right: auto;">
                                 <label>Idea Description</label><b style="color: red;">*</b>:<br>
-                                <input type="text" placeholder="Idea Description" style="height: 150px;width: 40%" name="idea_description" required/><br>
+                                <textarea placeholder="Idea Description" style="height: 150px;width: 40%" name="idea_description" required></textarea><br>
                             </div><br>
                             <div class="box" style="margin-left: auto; margin-right: auto;">
                                 <label>Idea Category</label><b style="color: red;">*</b>:<br>
@@ -67,7 +67,6 @@
                             </div><br>
                             <div class="button" style="margin-left: auto; margin-right: auto;">
                                 <input type="submit" value="Save">
-                                <input type="reset" value="Reset">
                             </div><br>
                         </form>
                     </div></td></tr></table>

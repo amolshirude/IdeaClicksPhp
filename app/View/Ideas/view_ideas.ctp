@@ -138,24 +138,6 @@
                 float: right;
             }
         </style>
-        <script type="text/javascript">
-            function viewPost(IdeaModelIdea_id){
-                var data = "id="+ IdeaModelIdea_id;
-                alert(data);
-                $.ajax({
-                    type: "post",  // Request method: post, get
-                    url: "../Ideas/IdeasController.php/like_dislike_comment/", // URL to request
-                    data: data,  // post data
-                    success: function(response) {
-                        document.getElementById("post-view").innerHTML = response;
-                    },
-                    error:function (XMLHttpRequest, textStatus, errorThrown) {
-                        alert(textStatus);
-                    }
-                });
-                return false;
-            }
-        </script>
     </head>
     <body>
         <header>
@@ -168,9 +150,9 @@
                     <?php foreach ($allIdeas as $row): ?>
                         <div class="idea-container">
                             <label >Title:</label>
-                           
- <a class="idea-tile" href="like_dislike_comment/<?php echo $row['IdeaModel']['idea_id']; ?>"><?php echo $row['IdeaModel']['idea_title']; ?></a> <br>
                             
+                            <a class="idea-tile" href="../Ideas/like_dislike_comment?id=<?php echo $row['IdeaModel']['idea_id']; ?>"><?php echo $row['IdeaModel']['idea_title']; ?></a> 
+                            <br>
                             <label>Description:</label>
                             <pre class="idea-description"><?php echo $row['IdeaModel']['idea_description']; ?></pre>
                             <br>
@@ -178,7 +160,7 @@
                                 <label>Category:</label>
                                 <span class="category"> <?php echo $row['IdeaModel']['idea_category']; ?> </span> <br>
                                 <label>submitted by:</label>
-                                <span class="submit-by"></span>
+                                <span class="submit-by"><?php echo $row['IdeaModel']['submitted_by']; ?></span>
                             </div>	
                         </div>
                         <br>
@@ -191,23 +173,17 @@
                     </div>
                 </div><br><br>
                 <div class="right-container">
-
                     <div class="box">
                         <b>Categories</b>
                     </div>
                     <div class="categories-container">
 
                         <?php foreach ($groupCategoriesList as $row): ?>
-                            <a class="category" href="filter_ideas"><?php echo $row['Category']['category_name']; ?></a><br>
+                            <a class="category" href="../Ideas/filter_ideas?category=<?php echo $row['Category']['category_name'];?>"><?php echo $row['Category']['category_name']; ?></a><br>
                         <?php endforeach; ?>
                     </div>
                 </div>
             </form>
-
         </div>
-        <!-- end of main -->
-
-
-    </body>
-
+      </body>
 </html>

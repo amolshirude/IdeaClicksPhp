@@ -1,6 +1,7 @@
 <?php
 
 App::uses('AppController', 'Controller');
+App::uses('Security', 'Utility'); 
 
 class UserController extends AppController {
     /* display terms and condition page */
@@ -20,10 +21,12 @@ class UserController extends AppController {
 
     public function user_profile() {
         $this->layout = '';
+        $sessionEmail = CakeSession::read('email');
+       
         $this->loadModel('User');
         $session_user_id = 1;//get user id from session
         $userInfo = $this->User->find('first', array(
-            'conditions' => array('User.user_id' => $session_user_id)));
+            'conditions' => array('User.user_email' => $sessionEmail)));
         $this->set('userInfo', $userInfo);
 
         $this->loadModel('GetRegisteredGroupData');
@@ -46,14 +49,15 @@ class UserController extends AppController {
         $this->loadModel('User');
         $result = $this->request->data;
         $error = $this->User->validation($result);
-
+        $key = 'iznWsaal5lKhOKu4f7f0YagKW81ClEBXqVuTjrFovrXXtOggrqHdDJqkGXsQpHf';
         if ($error === '') {
             $username = trim($this->request->data['user_name']);
             $useremail = trim($this->request->data['user_email']);
             $password = trim($this->request->data['password']);
             $cpassword = trim($this->request->data['c_password']);
             $usermobile = trim($this->request->data['user_mobile']);
-
+            // Encrypt your text with my_key
+            $encrypted_password = Security::cipher($password , $key);
             if (!empty($result)) {
 
                 $flag = true;
@@ -72,12 +76,15 @@ class UserController extends AppController {
                 if ($flag == true) {
                     if ($this->User->save(array('user_name' => $username,
                                 'user_email' => $useremail, 'user_mobile' => $usermobile,
-                                'password' => $password, 'c_password' => $cpassword))) {
+                                'password' => $encrypted_password))) {
                         $this->Session->write('message', 'Registration successful');
+                        //session
+                        CakeSession::write('user_name', $username);
+                        CakeSession::write('email', $useremail);
+                        
                         $this->redirect('../User/user_profile');
                     } else {
                         $this->Session->write('message', 'Registration unsuccessful');
-                        $this->Session->delete($name);
                         $this->redirect('../User/user_registration');
                     }
                 } else {
@@ -119,9 +126,9 @@ class UserController extends AppController {
     public function change_password() {
         $this->layout = '';
         $this->loadModel('User');
-        $user_id = //get user id from session;
-                $userInfo = $this->User->find('first', array(
-            'conditions' => array('User.user_id' => 1)));
+        $sessionEmail = CakeSession::read('email');
+        $userInfo = $this->User->find('first', array(
+            'conditions' => array('User.user_email' => $sessionEmail)));
         $this->set('userInfo', $userInfo);
     }
 
@@ -129,11 +136,13 @@ class UserController extends AppController {
 
     public function changePassword() {
         $this->loadModel('User');
+        $key = 'iznWsaal5lKhOKu4f7f0YagKW81ClEBXqVuTjrFovrXXtOggrqHdDJqkGXsQpHf';
         $userId = trim($this->request->data['user_id']);
         $password = trim($this->request->data['password']);
         $cpassword = trim($this->request->data['c_password']);
+        $encrypted_password = Security::cipher($password , $key);
         if ($password == $cpassword) {
-            if ($this->User->updateAll(array('password' => "'$password'"), array('user_id' => $userId))) {
+            if ($this->User->updateAll(array('password' => "'$encrypted_password'"), array('user_id' => $userId))) {
                 $this->Session->write('message', 'password changed successfully');
                 $this->redirect('../Ideas/submit_idea');
             } else {
