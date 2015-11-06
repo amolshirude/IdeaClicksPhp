@@ -3,12 +3,13 @@
 //echo $this->fetch('meta');
 //echo $this->fetch('css');
 //echo $this->fetch('script');
-echo $this->Html->script('jquery.min');
+echo $this->Html->script('jquery-1.7.2');
+//echo $this->Html->script('jquery.min');
 //echo $this->Html->css('style');
 //echo $this->Html->css('style_menu');
 //echo $this->Html->script('common');
 //echo $this->Html->script('datetimepicker_css');
-echo $this->Html->script('https://www.google.com/jsapi');
+//echo $this->Html->script('https://www.google.com/jsapi');
 //echo $this->Session->flash();
 ?>
 <html>
@@ -151,40 +152,7 @@ echo $this->Html->script('https://www.google.com/jsapi');
                 float: right;
             }
         </style>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                $('.i-comment').click(function(){
-                    var p1 = $(this).parent().get(0);
-                    $(p1).parent().find('.comment-container').eq(0).show();
-                    $(this).hide();
-                });
-                $( ".submitComment" ).click(function() 
-                { 
-                    var data = {commentText: $(this).closest('.comment-container').find('.comment-box').eq(0).val()},
-                    commentId=$(this).closest('.comment-container').find('.comment-id').eq(0).val();
-                    data.commentId=-1;
-                    
-                    if(commentId!="idea"){
-                        data.commentId = commentId;
-                    }
-                    console.log(data);
-                    
-                    jQuery.post('saveComment', {commentText:data}, function(data) {
-                        $("#comment").html(data);
-                    });
-                    //$(this).disable();
-                    //                    $.ajax({ 
-                    //                        url: "${saveComment}" , 
-                    //                        type: 'POST', 
-                    //                        datatype:'json', 
-                    //                        data: data, 
-                    //                        success: function(data){ 
-                    //                            console.log('success:save comment');	
-                    //                        } 
-                    //                    }); 
-                });
-            });
-        </script>
+
     </head>
     <body>
         <header>
@@ -196,6 +164,7 @@ echo $this->Html->script('https://www.google.com/jsapi');
             <div class="view-idea-container">
 
                 <div class="idea-container">
+                    <input type="hidden" name="idea_id" id="idea_id" value="<?php echo $Idea['IdeaModel']['idea_id']; ?>">
                     <label>Title:</label>
                     <span class="idea-description"> <?php echo $Idea['IdeaModel']['idea_title']; ?></span> <br>
                     <label>Description:</label>
@@ -221,31 +190,89 @@ echo $this->Html->script('https://www.google.com/jsapi');
 
                     <div id="like_dislike">
                         <img id="like" src="../app/webroot/img/thumbs-up.png"/>
-                        <?php echo $Idea['IdeaModel']['like_count']; ?>
+                        <input type="hidden" name="like_count" id="like_count" value="<?php echo $likes; ?>">
+                        <?php echo $likes; ?>
                         <img id="dislike" src="../app/webroot/img/thumbs-down.png"/>
-                        <?php echo $Idea['IdeaModel']['dislike_count']; ?>
+                        <input type="hidden" name="dislike_count" id="dislike_count" value="<?php echo $dislikes; ?>">
+                        <?php echo $dislikes; ?>
 
                         <button type="button" class="i-comment" value="Comment">Comment</button>
                         <div id="comment" class="box comment-container" style="margin-left: auto; margin-right: auto;display:none">
-                            <input type="hidden" value="idea" class="comment-id"/>
-                            <textarea class="comment-box" name="commentsText"
+                            <input type="hidden" value="idea" id="comment_id" class="comment-id"/>
+                            <input type="hidden" name="idea_id" value="<?php echo $Idea['IdeaModel']['idea_id']; ?>" />
+                            <textarea class="comment-box" id="commentsText" name="commentsText"
                                       title="Submit Your comment"
                                       style="width: 95%; height: 50px;"></textarea>
 
-                            <button id="commentsubmit"name="submit" value="submit" style="width:100px" class="submitComment">Submit</button>	
+                            <button class="submitComment" id="commentsubmit"name="submit" value="submit" style="width:100px" >Submit</button>	
                         </div>
+                    </div>
+                    <div id="likes"></div>
+                    <div id="dislikes"></div>
+                    <div>
+                        <?php foreach ($comments as $row): ?>
+                            <?php echo $row['CommentModel']['comment_text']; ?><br>
+                        <?php endforeach; ?> 
                     </div>
                 </div>
             </div>
     </body>
 </html>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.i-comment').click(function(){
+            var p1 = $(this).parent().get(0);
+            $(p1).parent().find('.comment-container').eq(0).show();
+            $(this).hide();
+        });
+        $( ".submitComment" ).click(function() 
+        { 
+            //            var data = {commentText: $(this).closest('.comment-container').find('.comment-box').eq(0).val()},
+            //            commentId=$(this).closest('.comment-container').find('.comment-id').eq(0).val();
+            //            data.commentId=-1;
+            var commentId = $(this).closest('.comment-container').find('.comment-id').eq(0).val();
+            var comment_text = $('#commentsText').val();
+            var idea_id = $('#idea_id').val();    
+            //            if(commentId!="idea"){
+            //                data.commentId = commentId;
+            //            }
+            
+                    
+            jQuery.post('saveComment', {ideaId:idea_id ,commentText: comment_text,commentId:commentId}, function(data) {
+                // $("#comment").html(data);
+            });
+            //$(this).disable();
+            //                    $.ajax({ 
+            //                        url: "${saveComment}" , 
+            //                        type: 'POST', 
+            //                        datatype:'json', 
+            //                        data: data, 
+            //                        success: function(data){ 
+            //                            console.log('success:save comment');	
+            //                        } 
+            //                    }); 
+        });
+    });
+</script>
 <script>
     $(document).ready(function () {
         $("#like").click(function () {
-            var like_count = 9;
-            jQuery.post('like', {likecount:like_count}, function(data) {
-                $("#like_dislike").html(data);
+            var idea_id = $('#idea_id').val();
+            var like_count = $('#like_count').val();
+                       
+            jQuery.post('like_idea', {ideaId: idea_id, likeCount: like_count}, function(data) {
+                //$('#likes').html(data);    
+                
             });
         });  
+        
+        $("#dislike").click(function () {
+            var idea_id = $('#idea_id').val();
+            var dislike_count = $('#dislike_count').val();
+            jQuery.post('dislike_idea', {ideaId: idea_id, dislikeCount: dislike_count}, function(data) {
+                //$('#dislikes').html(data);
+               
+            });
+        }); 
     });
-</script>
+</script> 

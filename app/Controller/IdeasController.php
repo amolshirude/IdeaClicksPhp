@@ -36,61 +36,144 @@ class IdeasController extends AppController {
                 'conditions' => array('IdeaModel.idea_id' => $id)));
             $this->set('Idea', $idea);
         }
-        if (!empty($_POST['dist_id'])) {
-            $this->layout = 'ajax';
-            $like_id = $_POST['dist_id'];
-            $this->set('like_id', $like_id);
-        }
-    }
-    
-    /*Save comment*/
-    public function saveComment(){
-        $this->layout = 'ajax';
-        $commentText = $_POST['commentText'];
-        //$commentId = $_POST['commentId'];
-        echo '<pre>';
-        print_r($commentText);
-        die();
-    }
-/* Like and Dislike*/
-    public function like(){
+        
         $this->layout = 'ajax';
         $this->loadModel('LikeDislikeStatus');
-        $like_count = $_POST['likecount'];
+        
+        $condition1 = array(
+            'conditions' => array(
+                'and' => array(
+                    'LikeDislikeStatus.idea_id' => $id,
+                    'LikeDislikeStatus.like_dislike_status' => 1)));
+        
+        $likes = $this->LikeDislikeStatus->find('all', $condition1);
+        $likeCount = sizeof($likes);
+        $this->set('likes', $likeCount);
+        
+        $condition2 = array(
+            'conditions' => array(
+                'and' => array(
+                    'LikeDislikeStatus.idea_id' => $id,
+                    'LikeDislikeStatus.like_dislike_status' => 0)));
+        
+        $dislikes = $this->LikeDislikeStatus->find('all', $condition2);
+        $dislikeCount = sizeof($dislikes);
+        $this->set('dislikes', $dislikeCount);    
+        
+        
+//        if (!empty($_POST['likeCount'])) {
+//            $this->layout = 'ajax';
+//            $likeCount = $_POST['likeCount'];
+//            $this->set('likeCount', $likeCount);          
+//        }
+//        
+//        if (!empty($_POST['dislikeCount'])) {
+//            $this->layout = 'ajax';
+//            $likeCount = $_POST['dislikeCount'];
+//            $this->set('dislikeCount', $dislikeCount);          
+//        }
+        
+        // display all comments
+        $this->loadModel('CommentModel');
+        $commentList = $this->CommentModel->find('all', array(
+            'conditions' => array('parent_idea_id' => $id)));
+        $this->set('comments',$commentList);
+    }
+
+    /* Like idea */
+
+    public function like_idea() {
+        $this->layout = 'ajax';
+        $idea_id = $_POST['ideaId'];
+        $like_count = $_POST['likeCount'];
+                
+        $this->loadModel('LikeDislikeStatus');
+        $this->loadModel('IdeaModel');
+        
         $like_count++;
         $session_userId = CakeSession::read('user_id');
-        $idea_id = 1;
         
         $opts = array(
             'conditions' => array(
                 'and' => array(
                     'LikeDislikeStatus.user_id' => $session_userId,
                     'LikeDislikeStatus.idea_id' => $idea_id)));
-        
+
         $getLikeDislikeStatusFromDb = $this->LikeDislikeStatus->find('first', $opts);
-        if(!empty($getLikeDislikeStatusFromDb)){
-        if($getLikeDislikeStatusFromDb['LikeDislikeStatus']['like_dislike_status']){
+        if (!empty($getLikeDislikeStatusFromDb)) {
+            if ($getLikeDislikeStatusFromDb['LikeDislikeStatus']['like_dislike_status']) {
+                $this->redirect('../Ideas/like_dislike_comment');
+            } else {
+                
+                $this->LikeDislikeStatus->updateAll(array('like_dislike_status' => 1),array('AND' => array('LikeDislikeStatus.user_id' => $session_userId,
+                    'LikeDislikeStatus.idea_id' => $idea_id )));
+                              
+                $this->redirect('../Ideas/like_dislike_comment');
+            }
+        } else {
+
+            $this->LikeDislikeStatus->save(array('user_id' => $session_userId, 'idea_id' => $idea_id,
+                'like_dislike_status' => 1));
             $this->redirect('../Ideas/like_dislike_comment');
         }
-        else{
-           $this->IdeaModel->updateAll(array('like_count'=>"'$like_count'"),array('idea_id' => $idea_id));
-           $this->LikeDislikeStatus->save(array('user_id' => "'$session_userId'", 'idea_id' => "'$idea_id'",
-                    'idea_id' => "'$idea_id'",'like_dislike_status' =>1));  
-           $this->redirect('../Ideas/like_dislike_comment');
-        }
-        }
-        else{
-            $this->IdeaModel->updateAll(array('like_count'=>"'$like_count'"),array('idea_id' => $idea_id));
-           $this->LikeDislikeStatus->save(array('user_id' => "'$session_userId'", 'idea_id' => "'$idea_id'",
-                    'idea_id' => "'$idea_id'",'like_dislike_status' =>1));  
-           $this->redirect('../Ideas/like_dislike_comment');
-        }
-        echo '<pre>';
-        print_r($getLikeDislikeStatusFromDb);
-        die();
         
-        $this->set('like_count', $like_count);
     }
+
+    /* Dislike idea */
+
+    public function dislike_idea() {
+        $this->layout = 'ajax';
+        $idea_id = $_POST['ideaId'];
+        $dislike_count = $_POST['dislikeCount'];
+        
+        $this->loadModel('LikeDislikeStatus');
+        $this->loadModel('IdeaModel');
+       
+        $dislike_count++;
+        $session_userId = CakeSession::read('user_id');
+
+        $opts = array(
+            'conditions' => array(
+                'and' => array(
+                    'LikeDislikeStatus.user_id' => $session_userId,
+                    'LikeDislikeStatus.idea_id' => $idea_id)));
+
+        $getLikeDislikeStatusFromDb = $this->LikeDislikeStatus->find('first', $opts);
+        if (!empty($getLikeDislikeStatusFromDb)) {
+            if ($getLikeDislikeStatusFromDb['LikeDislikeStatus']['like_dislike_status']) {
+                
+                $this->LikeDislikeStatus->updateAll(array('like_dislike_status' => 0),array('AND' => array('LikeDislikeStatus.user_id' => $session_userId,
+                    'LikeDislikeStatus.idea_id' => $idea_id )));
+                $this->redirect('../Ideas/like_dislike_comment');
+            } else {
+                $this->redirect('../Ideas/like_dislike_comment');
+            }
+        } else {
+            $this->LikeDislikeStatus->save(array('user_id' => $session_userId, 'idea_id' => $idea_id,
+                'like_dislike_status' => 0));
+            $this->redirect('../Ideas/like_dislike_comment');
+        }
+    }
+    
+    /* Save comment */
+
+    public function saveComment() {
+        $this->layout = 'ajax';
+        $commentText = $_POST['commentText'];
+        $parentCommentId = $_POST['commentId'];
+        $ideaId = $_POST['ideaId'];
+        $sessionEmail = CakeSession::read('email');
+        
+        $this->loadModel('CommentModel');
+        
+        
+        $this->CommentModel->save(array('comment_text' => $commentText,'parent_comment_id' => $parentCommentId,
+                                        'parent_idea_id' => $ideaId,'submitted_by' => $sessionEmail));
+        
+        
+        
+    }
+
     /* edit idea */
 
     public function edit_idea() {
@@ -162,7 +245,7 @@ class IdeasController extends AppController {
             if (!empty($result)) {
                 if ($this->IdeaModel->save(array('idea_title' => $title,
                             'idea_description' => $description, 'idea_category' => $category,
-                            'idea_status' => $status, 'group_id' => $session_group_id,'submitted_by' => $submitted_by))){
+                            'idea_status' => $status, 'group_id' => $session_group_id, 'submitted_by' => $submitted_by))) {
                     $this->Session->write('message', 'Registration successful');
                     $this->redirect('../Ideas/view_ideas');
                 } else {

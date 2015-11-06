@@ -1,0 +1,134 @@
+/*------------------------------------*\
+    CONTENTS
+\*------------------------------------*/
+/*
+NOTES
+FONTS
+SHARED
+HEADER
+SEARCH BAR
+MAIN
+LOGIN & REGISTER
+SIDEBAR
+WIDGETS
+SHORT CODES
+FOOTER
+IE FIXES
+*/
+
+/*------------------------------------*\
+    $Notes
+\*------------------------------------*/
+
+
+
+/*------------------------------------*\
+    $Shared
+\*------------------------------------*/
+
+h1, h2, h3, h4, h5, h6,
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+	color: #395785;
+}
+
+a {
+	color: #395785;
+}
+
+.main-gradient,
+.pagination .page-numbers.current,
+.pagination .page-numbers.next {
+	background: #5172a4;
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzUxNzJhNCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMzYTU4ODYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  #5172a4 0%, #3a5886 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5172a4), color-stop(100%,#3a5886));
+	background: -webkit-linear-gradient(top,  #5172a4 0%,#3a5886 100%);
+	background: -o-linear-gradient(top,  #5172a4 0%,#3a5886 100%);
+	background: -ms-linear-gradient(top,  #5172a4 0%,#3a5886 100%);
+	background: linear-gradient(to bottom,  #5172a4 0%,#3a5886 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5172a4', endColorstr='#3a5886',GradientType=0 );
+}
+
+
+/*------------------------------------*\
+    $Header
+\*------------------------------------*/
+header {
+	border-bottom: 2px solid #30496e;
+}
+
+.menu li a {
+	color: #d9e2ed;
+	border-top: 2px solid #5172a4;
+}
+
+#masthead .menu li.current-menu-item a {
+	color: #fff;
+	border-top: 2px solid #a0c6ff;
+}
+
+.profile-info img {
+	background: #3a5887;
+	border-top: 1px solid #284271;
+	border-left: 1px solid #284271;
+	border-right: 1px solid #5c81b0;
+	border-bottom: 1px solid #5c81b0;
+}
+
+.profile-info-actions .logout, 
+.profile-info-actions .register {
+	border-left: 1px solid #5a7eb2;
+}
+
+.profile-info .profile-info-actions a {
+	color: #8ca2c2;
+}
+
+
+/*------------------------------------*\
+    $Main
+\*------------------------------------*/
+/* ******* Tabs						  */
+.section-head-tabs ul li a.current {
+	color: #fff;
+	border: 1px solid #395785;
+}
+
+/* ******* Listings					  */
+.listing-count ul li {
+	background: #ebeef2;
+	color: #8b95a4;
+}
+
+.listing-counter-responses {
+	color: #3d5b8a;
+}
+
+.listing-info .excerpt {
+	color: #abadb3;
+}
+
+.status.open {
+	background: #e5f1fa;
+}
+
+.listing-date span {
+	color: #c3c5ca;
+}
+
+
+/* ******* Pagination                 */
+.pagination .page-numbers.current,
+.pagination .page-numbers.next {
+	color: #fff;
+	border: 1px solid #395785;
+}
+
+
+/*------------------------------------*\
+    $Widgets
+\*------------------------------------*/
+
+.widget-idea-author {
+	color: #395785;
+}

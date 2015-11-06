@@ -24,23 +24,44 @@ class UserController extends AppController {
         $sessionEmail = CakeSession::read('email');
        
         $this->loadModel('User');
-        $session_user_id = 1;//get user id from session
+        $session_user_id = CakeSession::read('user_id');//get user id from session
         $userInfo = $this->User->find('first', array(
             'conditions' => array('User.user_email' => $sessionEmail)));
         $this->set('userInfo', $userInfo);
 
-        $this->loadModel('GetRegisteredGroupData');
-        $group_info = $this->GetRegisteredGroupData->find('all', array(
-            'order' => array('GetRegisteredGroupData.group_name' => 'asc')));
-
-        $this->set('groupInfo', $group_info);
         
         //display join group request
         $this->loadModel('JoinGroup');
-        $joinGroupRequest = $this->JoinGroup->find('all',array(
-        'conditions' => array('user_id' => $session_user_id)));
+        
+        $joinGroupRequest = $this->JoinGroup->find('all', array(
+                            'conditions'=>array('user_id'=>$session_user_id),
+                            'fields'=>array('group_code')));
+//        $joinGroupRequest = $this->JoinGroup->find(array('fields' => array('JoinGroup.group_code'=> array(
+//        'conditions' => array('user_id' => $session_user_id)))));
 
-        $this->set('joinGroupRequest', $joinGroupRequest);
+        //$this->set('joinGroupRequest', $joinGroupRequest);
+//        echo '<pre>';
+//        print_r($joinGroupRequest[0][JoinGroup][group_code]);
+//        die();
+       
+
+        //display dropdown list of groupcode
+        
+        $this->loadModel('GetRegisteredGroupData');
+        
+        $group_info = $this->GetRegisteredGroupData->find('all', array('conditions' => array('NOT' => 
+            array('GetRegisteredGroupData.group_code' => ))));
+        
+//        $group_info = $this->GetRegisteredGroupData->find('all', array(
+//            'conditions' => array('NOT'=>array('GetRegisteredGroupData.group_code'=>array($joinGroupRequest)))));
+        echo '<pre>';
+        print_r($joinGroupRequest);
+        print_r($group_info);
+        die(); 
+        
+        $this->set('groupInfo', $group_info);
+              
+        
     }
 
     /* post user registration */
@@ -163,9 +184,9 @@ class UserController extends AppController {
         $error = $this->JoinGroup->validation($result);
 
         if ($error === '') {
-            $session_userId = 1;
-            $session_userName = 'Amol';
-            $sesion_userEmailId = 'amolshirude@gmail.com';
+            $session_userId = CakeSession::read('user_id');
+            $session_userName = CakeSession::read('user_name');
+            $sesion_userEmailId = CakeSession::read('email');
             $groupCode = trim($this->request->data['group_code']);
             $status = 'sent';
 
