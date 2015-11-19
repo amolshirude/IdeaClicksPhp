@@ -42,13 +42,13 @@ class AdminController extends AppController {
         $this->set('groupCampaignsList', $groupcampaigns);
 
         //display join group request
-        $session_group_code = '3dplm';
+        $session_group_code = 'IDCLK';
 
         $this->loadModel('JoinGroup');
         $joinGroupRequest = $this->JoinGroup->find('all', array(
             'conditions' => array('group_code' => $session_group_code)));
-
-        $this->set('joinGroupRequest', $joinGroupRequest);
+       
+        $this->set('JoinGroupRequest', $joinGroupRequest);
     }
 
     public function termsandcondition() {
@@ -83,7 +83,11 @@ class AdminController extends AppController {
             $groupadminemail = trim($this->request->data['group_admin_email']);
             $password = trim($this->request->data['password']);
             $cpassword = trim($this->request->data['c_password']);
-
+            $group_status = $this->request->data['group_status'];
+            
+            if ($group_status == '') {
+                $group_status = 'close';
+            }
             if (!empty($result)) {
 
                 $flag = true;
@@ -102,7 +106,7 @@ class AdminController extends AppController {
                 if ($flag == true) {
                     if ($this->CreateGroup->save(array('group_name' => $groupname, 'group_code' => $groupcode,
                                 'group_type' => $grouptype, 'group_admin_email' => $groupadminemail,
-                                'password' => $password, 'c_password' => $cpassword))) {
+                                'password' => $password, 'c_password' => $cpassword, 'group_status' =>$group_status))) {
                         $this->Session->write('message', 'Registration successful');
                         $this->redirect('../Admin/create_group');
                     } else {
@@ -266,12 +270,12 @@ class AdminController extends AppController {
     /* Edit campaign */
 
     public function edit_campaign() {
-        $this->layout = ''; 
+        $this->layout = '';
         $this->loadModel('Campaign');
         $campaign_id = trim($this->request->data['campaign_id']);
         $campaign = $this->Campaign->find('first', array(
-        'conditions' => array('Campaign.campaign_id' => $campaign_id)));
-         
+            'conditions' => array('Campaign.campaign_id' => $campaign_id)));
+
         $this->set('Campaign', $campaign);
     }
 
@@ -298,15 +302,13 @@ class AdminController extends AppController {
         $buttonValue = trim($this->request->data['button_value']);
 
         if ($buttonValue == 'Accept') {
-            
-        } else {
-            if ($this->JoinGroup->delete(array('request_id' => $requestId))) {
-                $this->Session->write('message', 'User Request has been deleted');
-                $this->redirect('../Admin/group_profile');
-            } else {
-                $this->Session->write('message', 'User Request not deleted');
-                $this->redirect('../Admin/group_profile');
-            }
+            $status = "Accepted";
+            $this->JoinGroup->updateAll(array('status' => "'$status'"), array('request_id' => $requestId));
+            $this->redirect('../Admin/group_profile');
+        } else if ($buttonValue == 'Reject'){
+            $status = "Rejected";
+            $this->JoinGroup->updateAll(array('status' => "'$status'"), array('request_id' => $requestId));
+            $this->redirect('../Admin/group_profile');
         }
     }
 

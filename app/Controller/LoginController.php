@@ -43,6 +43,7 @@ class loginController extends AppController {
             CakeSession::write('email', $userInfo['User']['user_email']);
             $this->redirect('../User/user_profile');
         } else {
+            $this->Session->write('message','Invalid username or password');
             $this->redirect('../login/home');
         }
     }

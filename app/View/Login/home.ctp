@@ -15,20 +15,26 @@
         </style>
     </head>
     <body>
-       <div>
+        <div>
             <table border="1" style="width:100%">
                 <tr>
                     <td bgcolor="#819FF7" align="right" height="10%" width="100%">
                         <div>
-                       <form name="login" action="postLogin" method="post">
-                            <input type="email" name="email" placeholder="email Id" required>
-                            <input type="password" name="password" placeholder="password" required>
-                            <input type="submit" value="login">
-                        </form>
+                            <form name="login" action="postLogin" method="post">
+                                <input type="email" name="email" placeholder="email Id" required>
+                                <input type="password" name="password" placeholder="password" required>
+                                <input type="submit" value="login">
+                            </form>
+                            <?php
+                            $message = $this->Session->consume('message');
+                            echo '<h4 style="color: #FF0000">';
+                            echo $message;
+                            echo '</h4>';
+                            ?>
                         </div>
                         <a href="../Pages/about_us"><b style="color: #ffffff">About Us</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="../Pages/contact_us"><b style="color: #ffffff">Contact Us</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                         <a href="../Password/forget_password"><b style="color: #ffffff">Forgot password ?</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="../Password/forget_password"><b style="color: #ffffff">Forgot password ?</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </td>
                 </tr>
             </table>

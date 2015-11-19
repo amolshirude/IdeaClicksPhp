@@ -127,8 +127,7 @@
 
 
             <?php
-            $message = '';
-            $message = $this->Session->read('message');
+            $message = $this->Session->consume('message');
             if ($message == "Registration successful") {
                 echo '<div> <h3 style="color: #008000">';
                 echo $message;
@@ -156,6 +155,7 @@
                 <label>Email Id:</label><input type="email"  name="group_admin_email" id="email_id" placeholder="Email Id" style="width:350px" required/>
                 <label>Password:</label> <input id="password" name="password" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" style="width:350px" required>
                 <label>Confirm Password:</label> <input id="cpassword" name="c_password" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" style="width:350px" required>
+                <p><input type="checkbox" name="group_status" value="open">Open Group</p>
                 <p><input type="checkbox" id="field_terms" onchange="this.setCustomValidity(validity.valueMissing ? 'Please indicate that you accept the Terms and Conditions' : '');" name="check" value="check" required >I accept <a href="termsandcondition">Terms and Conditions</a></p>
                 <input type="submit" id="submit" value="Register" />
             </form>

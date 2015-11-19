@@ -2,6 +2,7 @@
 
 App::uses('AppController', 'Controller');
 App::uses('Security', 'Utility'); 
+App::uses('CakeEmail', 'Network/Email');
 
 class UserController extends AppController {
     /* display terms and condition page */
@@ -35,40 +36,52 @@ class UserController extends AppController {
         
         $joinGroupRequest = $this->JoinGroup->find('all', array(
                             'conditions'=>array('user_id'=>$session_user_id),
-                            'fields'=>array('group_code')));
+                            'fields'=>array('group_name','status')));
+//        
 //        $joinGroupRequest = $this->JoinGroup->find(array('fields' => array('JoinGroup.group_code'=> array(
 //        'conditions' => array('user_id' => $session_user_id)))));
 
-        //$this->set('joinGroupRequest', $joinGroupRequest);
-//        echo '<pre>';
-//        print_r($joinGroupRequest[0][JoinGroup][group_code]);
-//        die();
+          $this->set('joinGroupRequest', $joinGroupRequest);
+
        
 
-        //display dropdown list of groupcode
+        //display dropdown list of groupname
         
         $this->loadModel('GetRegisteredGroupData');
         
-        $group_info = $this->GetRegisteredGroupData->find('all', array('conditions' => array('NOT' => 
-            array('GetRegisteredGroupData.group_code' => ))));
-        
+        $findUserJoinedGroup = $this->JoinGroup->find('all', array('fields' =>array('group_id'),
+                            'conditions'=>array('user_id'=>$session_user_id)));
+        $groupIdList = '';
+        foreach ($findUserJoinedGroup AS $value) {
+
+            if(!empty($groupIdList)){
+              $groupIdList =$groupIdList.','. trim($value['JoinGroup']['group_id']);  
+            }else{
+                $groupIdList = trim($value['JoinGroup']['group_id']);
+            }
+        }
 //        $group_info = $this->GetRegisteredGroupData->find('all', array(
-//            'conditions' => array('NOT'=>array('GetRegisteredGroupData.group_code'=>array($joinGroupRequest)))));
-        echo '<pre>';
-        print_r($joinGroupRequest);
-        print_r($group_info);
-        die(); 
+//            'conditions' => array('group_status' => 'open')));
+        $opts = array(
+            'conditions' => array(
+                'NOT' => array('group_id' => $groupIdList),
+                'group_status'=>'open'));
+        $group_info = $this->GetRegisteredGroupData->find('all', $opts);
+     
+//        echo '<pre>';
+//        print_r($groupIdList);
+//        print_r($group_info);
+//        die(); 
         
         $this->set('groupInfo', $group_info);
-              
-        
+       
     }
 
     /* post user registration */
 
     public function userRegistration() {
         $this->loadModel('User');
-        $result = $this->request->data;
+         $result = $this->request->data;
         $error = $this->User->validation($result);
         $key = 'iznWsaal5lKhOKu4f7f0YagKW81ClEBXqVuTjrFovrXXtOggrqHdDJqkGXsQpHf';
         if ($error === '') {
@@ -101,8 +114,8 @@ class UserController extends AppController {
                         $this->Session->write('message', 'Registration successful');
                         //session
                         CakeSession::write('user_name', $username);
-                        CakeSession::write('email', $useremail);
-                        
+                          CakeSession::write('email', $useremail);
+                         
                         $this->redirect('../User/user_profile');
                     } else {
                         $this->Session->write('message', 'Registration unsuccessful');
@@ -180,6 +193,7 @@ class UserController extends AppController {
 
     public function joinGroup() {
         $this->loadModel('JoinGroup');
+        $this->loadModel('CreateGroup');
         $result = $this->request->data;
         $error = $this->JoinGroup->validation($result);
 
@@ -187,7 +201,11 @@ class UserController extends AppController {
             $session_userId = CakeSession::read('user_id');
             $session_userName = CakeSession::read('user_name');
             $sesion_userEmailId = CakeSession::read('email');
-            $groupCode = trim($this->request->data['group_code']);
+            $group_id = trim($this->request->data['group_id']);
+            $groupInfo = $this->CreateGroup->find('first', array(
+            'conditions' => array('CreateGroup.group_id' => $group_id),
+                'fields'=>array('group_name')));
+            $group_name = $groupInfo['CreateGroup']['group_name'];
             $status = 'sent';
 
             if (!empty($result)) {
@@ -195,7 +213,7 @@ class UserController extends AppController {
 
                 if ($this->JoinGroup->save(array('user_id' => $session_userId,
                     'user_name' => $session_userName,'user_email' => $sesion_userEmailId,
-                    'group_code' => $groupCode,'status' => $status))) {
+                    'group_id' => $group_id,'group_name' => $group_name,'status' => $status))) {
                     $this->Session->write('message', 'Request sent');
                     $this->redirect('../User/user_profile');
                 } else {

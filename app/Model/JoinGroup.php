@@ -11,8 +11,8 @@ var $useTable = 'join_group';
 
 function validation($data) {
         $errorString = '';
-        if ($this->isEmpty(trim($data['group_code'])) == '') {
-            $errorString.='<li>Invalid group code.</li>';
+        if ($this->isEmpty(trim($data['group_id'])) == '') {
+            $errorString.='<li>Invalid group name.</li>';
         }
         
        return $errorString;

@@ -174,7 +174,9 @@ echo $this->Html->script('jquery-1.7.2');
                         <label>Category:</label>
                         <span class="category"> <?php echo $Idea['IdeaModel']['idea_category']; ?> </span> <br>
                         <label>submitted by:</label>
-                        <span class="submit-by"><?php echo $Idea['IdeaModel']['submitted_by']; ?></span>
+                        <span class="submit-by"><?php echo $Idea['IdeaModel']['submitted_by']; ?></span> <br>
+                                <label>Group Name:</label>
+                                <span class="submit-by"><?php echo $Idea['IdeaModel']['group_name']; ?></span>
                     </div><br>	
                     <div>
                         <form name="edit_idea" action="edit_idea" method="post">

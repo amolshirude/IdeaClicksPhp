@@ -41,19 +41,19 @@ class EmailConfig {
 
 	public $default = array(
 		'transport' => 'Mail',
-		'from' => 'you@localhost',
+		'from' => 'team.ideaclicks@gmail.com',
 		//'charset' => 'utf-8',
 		//'headerCharset' => 'utf-8',
 	);
 
 	public $smtp = array(
 		'transport' => 'Smtp',
-		'from' => array('site@localhost' => 'My Site'),
+		'from' => array('team.ideaclicks@gmail.com' => 'My Site'),
 		'host' => 'localhost',
 		'port' => 25,
 		'timeout' => 30,
-		'username' => 'user',
-		'password' => 'secret',
+		'username' => 'team.ideaclicks@gmail.com',
+		'password' => 'C204LaValle#',
 		'client' => null,
 		'log' => false,
 		//'charset' => 'utf-8',
@@ -61,7 +61,7 @@ class EmailConfig {
 	);
 
 	public $fast = array(
-		'from' => 'you@localhost',
+		'from' => 'team.ideaclicks@gmail.com',
 		'sender' => null,
 		'to' => null,
 		'cc' => null,
@@ -83,8 +83,8 @@ class EmailConfig {
 		'host' => 'localhost',
 		'port' => 25,
 		'timeout' => 30,
-		'username' => 'user',
-		'password' => 'secret',
+		'username' => 'team.ideaclicks@gmail.com',
+		'password' => 'C204LaValle#',
 		'client' => null,
 		'log' => true,
 		//'charset' => 'utf-8',

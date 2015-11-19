@@ -150,7 +150,7 @@
                     <?php foreach ($allIdeas as $row): ?>
                         <div class="idea-container">
                             <label >Title:</label>
-                            
+
                             <a class="idea-tile" href="../Ideas/like_dislike_comment?id=<?php echo $row['IdeaModel']['idea_id']; ?>"><?php echo $row['IdeaModel']['idea_title']; ?></a> 
                             <br>
                             <label>Description:</label>
@@ -160,7 +160,9 @@
                                 <label>Category:</label>
                                 <span class="category"> <?php echo $row['IdeaModel']['idea_category']; ?> </span> <br>
                                 <label>submitted by:</label>
-                                <span class="submit-by"><?php echo $row['IdeaModel']['submitted_by']; ?></span>
+                                <span class="submit-by"><?php echo $row['IdeaModel']['submitted_by']; ?></span> <br>
+                                <label>Group Name:</label>
+                                <span class="submit-by"><?php echo $row['IdeaModel']['group_name']; ?></span>
                             </div>	
                         </div>
                         <br>
@@ -179,11 +181,11 @@
                     <div class="categories-container">
 
                         <?php foreach ($groupCategoriesList as $row): ?>
-                            <a class="category" href="../Ideas/filter_ideas?category=<?php echo $row['Category']['category_name'];?>"><?php echo $row['Category']['category_name']; ?></a><br>
+                            <a class="category" href="../Ideas/filter_ideas?category=<?php echo $row['Category']['category_name']; ?>"><?php echo $row['Category']['category_name']; ?></a><br>
                         <?php endforeach; ?>
                     </div>
                 </div>
             </form>
         </div>
-      </body>
+    </body>
 </html>

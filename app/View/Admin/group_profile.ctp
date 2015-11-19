@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
     <head>
         <style>
@@ -25,7 +24,7 @@
             }
 
         </style>
-
+       
         <title>Group Profile</title>
     </head>
     <body>
@@ -50,20 +49,26 @@
                     <div align="left">
                         <table border="1">
                             <tr>
-                                <th>Group code</th>
+                                <th>Email Id</th>
                                 <th>Status</th>
                             </tr>
-                            <?php foreach ($joinGroupRequest as $row): ?> 
-                            <tr>
-                                <td><?php echo $row['JoinGroup']['group_code']; ?></td>
-                                <td>
-                                    <form name="joinGroupStatus" action="joinGroupStatus" method="post">
-                                        <input type="hidden" name="request_id" value="<?php echo $row['JoinGroup']['request_id']; ?>">
-                                        <input type="submit" name="button_value" value="Accept">
-                                        <input type="submit" name="button_value" value="Delete">
-                                    </form>
-                                </td> 
-                            </tr>
+                            <?php foreach ($JoinGroupRequest as $row): ?> 
+                                <tr>
+                                    <td><?php echo $row['JoinGroup']['user_email']; ?></td>
+                                    <td>
+                                        <form name="joinGroupStatus" action="joinGroupStatus" method="post">
+                                            <input type="hidden" name="request_id" value="<?php echo $row['JoinGroup']['request_id']; ?>">
+                                        <?php if($row['JoinGroup']['status'] == "Accepted"){?>
+                                                <input type="submit" name="button_value" value="Reject">
+                                        <?php }else if($row['JoinGroup']['status'] == "Rejected"){?>
+                                                <input type="submit" name="button_value" value="Accept">
+                                        <?php }else{?>
+                                            <input type="submit" name="button_value" value="Accept">
+                                            <input type="submit" name="button_value" value="Reject">
+                                        <?php }?>    
+                                        </form>
+                                    </td> 
+                                </tr>
                             <?php endforeach; ?>
                         </table>
                     </div>

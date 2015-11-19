@@ -54,10 +54,21 @@
                             <div class="box" style="margin-left: auto; margin-right: auto;">
                                 <label>Idea Category</label><b style="color: red;">*</b>:<br>
                                 <select name="idea_category" style="height: 25px;width: 40%" required>
-                                    <option value="">Select category</option>
+                                    <option value="">Select Category</option>
                                     <?php foreach ($groupCategoriesList as $row): ?>
                                         <option value ="<?php echo $row['Category']['category_name']; ?>">
                                             <?php echo $row['Category']['category_name']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div><br>
+                            <div class="box" style="margin-left: auto; margin-right: auto;">
+                                <label>Select Group</label><b style="color: red;">*</b>:<br>
+                                <select name="group_name" style="height: 25px;width: 40%" required>
+                                    <option value="">Select Group</option>
+                                    <?php foreach ($userJoinedGroupList as $row): ?>
+                                        <option value ="<?php echo $row['JoinGroup']['group_name']; ?>">
+                                            <?php echo $row['JoinGroup']['group_name']; ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>

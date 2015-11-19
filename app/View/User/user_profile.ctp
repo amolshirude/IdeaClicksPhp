@@ -28,82 +28,6 @@
             }
 
         </style>
-
-        <script type="text/javascript">
-
-            document.addEventListener("DOMContentLoaded", function() {
-
-                // JavaScript form validation
-
-                var checkPassword = function(str)
-                {
-                    var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
-                    return re.test(str);
-                };
-
-                var checkForm = function(e)
-                {
-                    if(this.password.value != "" && this.password.value == this.c_password.value) {
-                        if(!checkPassword(this.password.value)) {
-                            alert("The password you have entered is not valid!");
-                            this.password.focus();
-                            e.preventDefault();
-                            return;
-                        }
-                    } else {
-                        alert("Error: Please check that you've entered and confirmed your password!");
-                        this.password.focus();
-                        e.preventDefault();
-                        return;
-                    }
-                };
-
-                var myForm = document.getElementById("myForm");
-                myForm.addEventListener("submit", checkForm, true);
-
-                // HTML5 form validation
-
-                var supports_input_validity = function()
-                {
-                    var i = document.createElement("input");
-                    return "setCustomValidity" in i;
-                }
-
-                if(supports_input_validity()) {
-                    var usernameInput = document.getElementById("field_username");
-                    usernameInput.setCustomValidity(usernameInput.title);
-
-                    var passwordInput = document.getElementById("password");
-                    passwordInput.setCustomValidity(passwordInput.title);
-
-                    var c_passwordInput = document.getElementById("cpassword");
-
-                    // input key handlers
-
-                    usernameInput.addEventListener("keyup", function() {
-                        usernameInput.setCustomValidity(this.validity.patternMismatch ? usernameInput.title : "");
-                    }, false);
-
-                    passwordInput.addEventListener("keyup", function() {
-                        this.setCustomValidity(this.validity.patternMismatch ? passwordInput.title : "");
-                        if(this.checkValidity()) {
-                            c_passwordInput.pattern = this.value;
-                            c_passwordInput.setCustomValidity(c_passwordInput.title);
-                        } else {
-                            c_passwordInput.pattern = this.pattern;
-                            c_passwordInput.setCustomValidity("");
-                        }
-                    }, false);
-
-                    c_passwordInput.addEventListener("keyup", function() {
-                        this.setCustomValidity(this.validity.patternMismatch ? c_passwordInput.title : "");
-                    }, false);
-
-                }
-
-            }, false);
-
-        </script>
     </head>
     <body>
         <header>
@@ -116,12 +40,12 @@
                  <div align="left">
                         <h3> Join Group </h3>
                         <form name="joinGroup" action="joinGroup" method="post">
-                            <label>Group Code:</label>
-                            <select name="group_code" style="height: 30px;width: 120px" required>
+                            <label>Group Name:</label>
+                            <select name="group_id" style="height: 30px;width: 120px" required>
                                 <option value="">Select Group</option>
                                 <?php foreach ($groupInfo as $row): ?>
-                                    <option value ="<?php echo $row['GetRegisteredGroupData']['group_code']; ?>">
-                                        <?php echo $row['GetRegisteredGroupData']['group_code']; ?>
+                                <option value ="<?php echo $row['GetRegisteredGroupData']['group_id']; ?>">
+                                        <?php echo $row['GetRegisteredGroupData']['group_name']; ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -132,12 +56,12 @@
                     <div align="left">
                         <table border="1">
                             <tr>
-                                <th>Group code</th>
+                                <th>Group Name</th>
                                 <th>Status</th>
                             </tr>
                             <?php foreach ($joinGroupRequest as $row): ?> 
                             <tr>
-                                <td><?php echo $row['JoinGroup']['group_code']; ?></td>
+                                <td><?php echo $row['JoinGroup']['group_name']; ?></td>
                                 <td><?php echo $row['JoinGroup']['status']; ?></td> 
                             </tr>
                             <?php endforeach; ?>
