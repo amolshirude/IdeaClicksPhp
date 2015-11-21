@@ -157,7 +157,7 @@ echo $this->Html->script('jquery-1.7.2');
     <body>
         <header>
             <h3>view Idea</h3>
-            <?php echo $this->element('../Pages/header1'); ?>
+            <?php echo $this->element('../Pages/admin_header'); ?>
         </header><br>
         <div class="box" style="margin-left: auto; margin-right: auto;">
 
@@ -178,14 +178,15 @@ echo $this->Html->script('jquery-1.7.2');
                                 <label>Group Name:</label>
                                 <span class="submit-by"><?php echo $Idea['IdeaModel']['group_name']; ?></span>
                     </div><br>	
-                    <?php if($session_email == $Idea['IdeaModel']['submitted_by']){ ?>
                     <div>
-                        <form name="edit_idea" action="edit_idea" method="post">
-                            <input type="hidden" name="idea_id" value="<?php echo $Idea['IdeaModel']['idea_id']; ?>" /> 
-                            <input type="submit" value="Edit">
+                       
+                        <form name="deleteIdea" action="deleteIdea" method="post">
+                            <input type="hidden" name="idea_id" value="<?php echo $Idea['IdeaModel']['idea_id']; ?>" />
+                            <input type="submit" value="Delete">
                         </form>
+
                     </div>
-                    <?php } ?>                
+
                     <div id="like_dislike">
                         <img id="like" src="../app/webroot/img/thumbs-up.png"/>
                         <input type="hidden" name="like_count" id="like_count" value="<?php echo $likes; ?>">

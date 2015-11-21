@@ -127,7 +127,7 @@
 
 
             <?php
-            $message = $this->Session->consume('message');
+            $message = $this->Session->consume('group_reg_message');
             if ($message == "Registration successful") {
                 echo '<div> <h3 style="color: #008000">';
                 echo $message;
@@ -139,7 +139,7 @@
             }
             ?>
 
-            <form name="register" action='register' method="post">
+            <form id="myForm" name="register" action='register' method="post">
 
                 <label>Group Name:</label><input type="text" name="group_name" id="group_name" placeholder="Group Name" style="width:350px" required/>
                 <label>Group code:</label><input type="text" name="group_code" id="group_code" placeholder="Group Code" style="width:350px" required/>

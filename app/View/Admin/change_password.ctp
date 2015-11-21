@@ -15,6 +15,7 @@
                 padding:1px; 
             }
         </style>
+        
         <script type="text/javascript">
 
             document.addEventListener("DOMContentLoaded", function() {
@@ -93,7 +94,7 @@
     <body>
         <header>
             <h3>Change Password</h3>
-            <?php echo $this->element('../Pages/header1'); ?>
+            <?php echo $this->element('../Pages/admin_header'); ?>
         </header>        
         <br>
         <table width="100%" border="1">
@@ -102,19 +103,19 @@
                     <div align="left">
 
                         <form id="myForm" name="changepassword" action="changePassword" method="post">
-                            <input type="hidden" name="user_id" value="<?php echo $userInfo['User']['user_id']; ?>"/>
-                            <label>Old Password</label>:<br><input id="password" name="password" value="<?php echo $userInfo['User']['password']; ?>" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" readonly style="height: 25px;width:350px" required /><br>
+                            <input type="hidden" name="group_id" value="<?php echo $groupInfo['CreateGroup']['group_id']; ?>"/>
+                            <label>Old Password</label>:<br><input id="opassword" name="opassword" value="<?php echo $groupInfo['CreateGroup']['password']; ?>" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" readonly style="height: 25px;width:350px" required /><br>
                             <label>New Password</label>:<br><input id="password" name="password" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" style="height: 25px; width:350px" required /><br>
                             <label>Confirm Password</label>:<br><input id="cpassword" name="c_password" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" style="height: 25px; width:350px"><br><br>
                             <input type="submit" value="Update">
                             <input type="reset" value="Reset">
                         </form>
-                        <?php
-                        $message = $this->Session->consume('pcmessage');
-                        echo '<h4 style="color: #FF0000">';
-                        echo $message;
-                        echo '</h4>';
-                        ?>
+                         <?php
+                            $message = $this->Session->consume('pcmessage');
+                            echo '<h4 style="color: #FF0000">';
+                            echo $message;
+                            echo '</h4>';
+                            ?>
                     </div></td></table>
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         <footer>

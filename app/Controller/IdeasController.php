@@ -14,13 +14,17 @@ class IdeasController extends AppController {
 
         /* display join group */
         $this->loadModel('JoinGroup');
-        $session_user_id = CakeSession::read('user_id');
-        $status = "Activated";
+        $session_user_id = CakeSession::read('session_id');
+        
+        if(empty($session_user_id)){
+         $this->redirect('../login/home');   
+        }
+        
         $opts = array(
             'conditions' => array(
                 'and' => array(
                     'JoinGroup.user_id' => $session_user_id,
-                    'JoinGroup.status' => $status)));
+                    'JoinGroup.status' => 'Accepted')));
 
         $userJoinedGroupList = $this->JoinGroup->find('all', $opts);
 
@@ -32,8 +36,14 @@ class IdeasController extends AppController {
     public function view_ideas() {
         $this->layout = '';
         $this->loadModel('IdeaModel');
-        $session_user_id = CakeSession::read('user_id');
-        /* display ideas categories */
+        //session
+        $session_user_id = CakeSession::read('session_id');
+        
+        if(empty($session_user_id)){
+         $this->redirect('../login/home');   
+        }
+        
+        /* display ideas categ ories */
         $this->displayCategories();
         /* display request accepted group ideas */
 
@@ -62,10 +72,7 @@ class IdeasController extends AppController {
             'conditions' => array(
                 'IN' => array('group_name' => array('cognizant'))));
 
-
         $allIdeas = $this->IdeaModel->find('all');
-
-
         $this->set('allIdeas', $allIdeas);
     }
 
@@ -81,7 +88,9 @@ class IdeasController extends AppController {
                 'conditions' => array('IdeaModel.idea_id' => $id)));
             $this->set('Idea', $idea);
         }
-
+        //set session email for edit idea option for user
+        $this->set('session_email',CakeSession::read('session_email'));
+        
         $this->layout = 'ajax';
         $this->loadModel('LikeDislikeStatus');
 
@@ -135,7 +144,7 @@ class IdeasController extends AppController {
         $this->loadModel('IdeaModel');
 
         $like_count++;
-        $session_userId = CakeSession::read('user_id');
+        $session_userId = CakeSession::read('session_id');
 
         $opts = array(
             'conditions' => array(
@@ -173,7 +182,7 @@ class IdeasController extends AppController {
         $this->loadModel('IdeaModel');
 
         $dislike_count++;
-        $session_userId = CakeSession::read('user_id');
+        $session_userId = CakeSession::read('session_id');
 
         $opts = array(
             'conditions' => array(
@@ -205,7 +214,7 @@ class IdeasController extends AppController {
         $commentText = $_POST['commentText'];
         $parentCommentId = $_POST['commentId'];
         $ideaId = $_POST['ideaId'];
-        $sessionEmail = CakeSession::read('email');
+        $sessionEmail = CakeSession::read('session_email');
 
         $this->loadModel('CommentModel');
 
@@ -228,7 +237,7 @@ class IdeasController extends AppController {
 
         /* display join group */
         $this->loadModel('JoinGroup');
-        $session_user_id = CakeSession::read('user_id');
+        $session_user_id = CakeSession::read('session_id');
         $status = "Activated";
         $opts = array(
             'conditions' => array(
@@ -292,7 +301,7 @@ class IdeasController extends AppController {
             $category = trim($this->request->data['idea_category']);
             $group_name = trim($this->request->data['group_name']);
             $status = $this->request->data['idea_status'];
-            $submitted_by = CakeSession::read('email');
+            $submitted_by = CakeSession::read('session_email');
             if ($status == '') {
                 $status = 'public';
             }
@@ -331,7 +340,7 @@ class IdeasController extends AppController {
     public function displayCategories() {
 
         $this->loadModel('Category');
-        $groupCategoriesList = $this->Category->find('all', array(
+        $groupCategoriesList = $this->Category->find('all',array('fields'=>array('DISTINCT category_name')) ,array(
             'order' => array('Category.category_name' => 'asc')));
         $this->set('groupCategoriesList', $groupCategoriesList);
     }

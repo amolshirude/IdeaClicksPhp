@@ -26,7 +26,7 @@
                                 <input type="submit" value="login">
                             </form>
                             <?php
-                            $message = $this->Session->consume('message');
+                            $message = $this->Session->consume('login_message');
                             echo '<h4 style="color: #FF0000">';
                             echo $message;
                             echo '</h4>';

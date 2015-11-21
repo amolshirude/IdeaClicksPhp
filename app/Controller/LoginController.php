@@ -8,17 +8,11 @@ class loginController extends AppController {
     public function home() {
         $this->layout = '';
         $key = 'iznWsaal5lKhOKu4f7f0YagKW81ClEBXqVuTjrFovrXXtOggrqHdDJqkGXsQpHf';
-        CakeSession::delete('email');
-        // Encrypt your text with my_key
-        $secret = Security::cipher('Amol@123', $key);
 
-        // Later decrypt your text
-        $nosecret = Security::cipher($secret, $key);
-
-//        echo"<pre>";
-//        print_r($secret."  ");
-//        print_r($nosecret);
-//        die();
+        CakeSession::delete('session_id');
+        CakeSession::delete('session_name');
+        CakeSession::delete('session_email');
+        CakeSession::delete('session_code');
     }
 
     public function postLogin() {
@@ -38,16 +32,30 @@ class loginController extends AppController {
         $userInfo = $this->User->find('first', $opts);
         if ($userInfo) {
             //session
-            CakeSession::write('user_id', $userInfo['User']['user_id']);
-            CakeSession::write('user_name', $userInfo['User']['user_name']);
-            CakeSession::write('email', $userInfo['User']['user_email']);
+            CakeSession::write('session_id', $userInfo['User']['user_id']);
+            CakeSession::write('session_name', $userInfo['User']['user_name']);
+            CakeSession::write('session_email', $userInfo['User']['user_email']);
             $this->redirect('../User/user_profile');
         } else {
-            $this->Session->write('message','Invalid username or password');
-            $this->redirect('../login/home');
+            $this->loadModel('CreateGroup');
+            $opts = array(
+                'conditions' => array(
+                    'and' => array(
+                        'CreateGroup.group_admin_email' => $email,
+                        'CreateGroup.password' => $encrypted_password)));
+            $groupInfo = $this->CreateGroup->find('first', $opts);
+            if ($groupInfo) {
+                //session
+                CakeSession::write('session_id', $groupInfo['CreateGroup']['group_id']);
+                CakeSession::write('session_name', $groupInfo['CreateGroup']['group_name']);
+                CakeSession::write('session_code', $groupInfo['CreateGroup']['group_code']);
+                CakeSession::write('session_email', $groupInfo['CreateGroup']['group_admin_email']);
+                $this->redirect('../Admin/group_profile');
+            } else {
+                $this->Session->write('login_message', 'Invalid username or password');
+                $this->redirect('../login/home');
+            }
         }
     }
-
 }
-
 ?>

@@ -22,15 +22,20 @@ class UserController extends AppController {
 
     public function user_profile() {
         $this->layout = '';
-        $sessionEmail = CakeSession::read('email');
-       
         $this->loadModel('User');
-        $session_user_id = CakeSession::read('user_id');//get user id from session
-        $userInfo = $this->User->find('first', array(
-            'conditions' => array('User.user_email' => $sessionEmail)));
-        $this->set('userInfo', $userInfo);
-
         
+        //session
+        $session_user_id = CakeSession::read('session_id');
+        $sessionEmail = CakeSession::read('session_email');
+                
+        if(empty($session_user_id)){
+         $this->redirect('../login/home');   
+        }
+        // display user profile
+        $userInfo = $this->User->find('first', array(
+            'conditions' => array('User.user_id' => $session_user_id)));
+        $this->set('userInfo', $userInfo);
+               
         //display join group request
         $this->loadModel('JoinGroup');
         
@@ -96,9 +101,12 @@ class UserController extends AppController {
 
                 $flag = true;
                 $this->loadModel('User');
-                $user_info = $this->User->find('all');
+                $userInfo = $this->User->find('all');
+                
+                $this->loadModel('CreateGroup');
+                $groupInfo = $this->CreateGroup->find('all');
 
-                foreach ($user_info AS $arr => $value) {
+                foreach ($userInfo AS $value) {
 
                     $user_email = trim($value['User']['user_email']);
 
@@ -107,22 +115,36 @@ class UserController extends AppController {
                         break;
                     }
                 }
+                foreach ($groupInfo AS $value) {
+
+                    $group_admin_email = trim($value['CreateGroup']['group_admin_email']);
+
+                    if ($group_admin_email == $useremail) {
+                        $flag = false;
+                        break;
+                    }
+                }
+                
                 if ($flag == true) {
                     if ($this->User->save(array('user_name' => $username,
                                 'user_email' => $useremail, 'user_mobile' => $usermobile,
                                 'password' => $encrypted_password))) {
                         $this->Session->write('message', 'Registration successful');
+                        //find user id from db
+                        $result = $this->User->find('first', array(
+                        'conditions' => array('User.user_email' => $useremail)));
                         //session
-                        CakeSession::write('user_name', $username);
-                          CakeSession::write('email', $useremail);
+                        CakeSession::write('session_id', $result['User']['user_id']);
+                        CakeSession::write('session_name', $username);
+                        CakeSession::write('session_email', $useremail);
                          
                         $this->redirect('../User/user_profile');
                     } else {
-                        $this->Session->write('message', 'Registration unsuccessful');
+                        $this->Session->write('user_reg_message', 'Registration unsuccessful');
                         $this->redirect('../User/user_registration');
                     }
                 } else {
-                    $this->Session->write('message', 'Already registered');
+                    $this->Session->write('user_reg_message', 'Already registered');
                     $this->redirect('../User/user_registration');
                 }
             }
@@ -147,10 +169,10 @@ class UserController extends AppController {
 
         if ($this->User->updateAll(array('user_name' => "'$userName'", 'gender' => "'$gender'", 'user_address' => "'$userAddress'",
                     'country' => "'$country'", 'state' => "'$state'", 'city' => "'$city'", 'pincode' => "'$pincode'"), array('user_id' => $userId))) {
-            $this->Session->write('message', 'updated successful');
+            $this->Session->write('message', 'Your profile updated successful');
             $this->redirect('../User/change_password');
         } else {
-            $this->Session->write('message', 'Your Idea not updated');
+            $this->Session->write('message', 'Your profile not updated');
             $this->redirect('../User/user_profile');
         }
     }
@@ -160,7 +182,7 @@ class UserController extends AppController {
     public function change_password() {
         $this->layout = '';
         $this->loadModel('User');
-        $sessionEmail = CakeSession::read('email');
+        $sessionEmail = CakeSession::read('session_email');
         $userInfo = $this->User->find('first', array(
             'conditions' => array('User.user_email' => $sessionEmail)));
         $this->set('userInfo', $userInfo);
@@ -177,14 +199,14 @@ class UserController extends AppController {
         $encrypted_password = Security::cipher($password , $key);
         if ($password == $cpassword) {
             if ($this->User->updateAll(array('password' => "'$encrypted_password'"), array('user_id' => $userId))) {
-                $this->Session->write('message', 'password changed successfully');
+                $this->Session->write('pcmessage', 'password changed successfully');
                 $this->redirect('../Ideas/submit_idea');
             } else {
-                $this->Session->write('message', 'Password not changed');
+                $this->Session->write('pcmessage', 'Password not changed');
                 $this->redirect('../User/change_password');
             }
         } else {
-            $this->Session->write('message', 'password and confirm pasword different');
+            $this->Session->write('pcmessage', 'password and confirm pasword different');
             $this->redirect('../User/change_password');
         }
     }
@@ -198,14 +220,14 @@ class UserController extends AppController {
         $error = $this->JoinGroup->validation($result);
 
         if ($error === '') {
-            $session_userId = CakeSession::read('user_id');
-            $session_userName = CakeSession::read('user_name');
-            $sesion_userEmailId = CakeSession::read('email');
+            $session_userId = CakeSession::read('session_id');
+            $session_userName = CakeSession::read('session_name');
+            $sesion_userEmailId = CakeSession::read('session_email');
             $group_id = trim($this->request->data['group_id']);
             $groupInfo = $this->CreateGroup->find('first', array(
-            'conditions' => array('CreateGroup.group_id' => $group_id),
-                'fields'=>array('group_name')));
+            'conditions' => array('CreateGroup.group_id' => $group_id)));
             $group_name = $groupInfo['CreateGroup']['group_name'];
+            $group_code = $groupInfo['CreateGroup']['group_code'];
             $status = 'sent';
 
             if (!empty($result)) {
@@ -213,7 +235,7 @@ class UserController extends AppController {
 
                 if ($this->JoinGroup->save(array('user_id' => $session_userId,
                     'user_name' => $session_userName,'user_email' => $sesion_userEmailId,
-                    'group_id' => $group_id,'group_name' => $group_name,'status' => $status))) {
+                    'group_id' => $group_id,'group_name' => $group_name,'group_code' => $group_code,'status' => $status))) {
                     $this->Session->write('message', 'Request sent');
                     $this->redirect('../User/user_profile');
                 } else {

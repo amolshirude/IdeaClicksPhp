@@ -142,7 +142,7 @@
     <body>
         <header>
             <h3>view Idea</h3>
-            <?php echo $this->element('../Pages/header1'); ?>
+            <?php echo $this->element('../Pages/admin_header'); ?>
         </header><br>
         <div class="box" style="margin-left: auto; margin-right: auto;">
 		
@@ -179,9 +179,9 @@
 					<b>Categories</b>
 				</div>
 				<div class="categories-container">
-                                    <a href="../Ideas/view_ideas">View all Ideas</a><br>
+                                    <a href="../Admin/view_ideas">View all Ideas</a><br>
 					 <?php foreach ($groupCategoriesList as $row): ?>
-						<a class="category" href="../Ideas/filter_ideas?category=<?php echo $row['Category']['category_name'];?>"><?php echo $row['Category']['category_name']; ?></a>
+						<a class="category" href="../Admin/filter_ideas?category=<?php echo $row['Category']['category_name'];?>"><?php echo $row['Category']['category_name']; ?></a>
 						<br>
                                          <?php endforeach; ?>
 				</div>

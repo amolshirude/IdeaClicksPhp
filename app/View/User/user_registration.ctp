@@ -9,7 +9,7 @@
                 padding:1px; 
             }
             footer {
-                 background-color:black;
+                background-color:black;
                 color:white;
                 text-align:left;
                 padding:1px; 
@@ -157,29 +157,35 @@
 </head>
 <body>
     <div>
-    <header>
-        <h3>User Registration</h3>
-         <?php echo $this->element('../Pages/header2'); ?>
-    </header>
-</div>
+        <header>
+            <h3>User Registration</h3>
+            <?php echo $this->element('../Pages/header2'); ?>
+        </header>
+    </div>
     <div>
-    <section>
+        <section>
+            <?php
+            $message = $this->Session->consume('user_reg_message');
+            echo '<h4 style="color: #FF0000">';
+            echo $message;
+            echo '</h4>';
+            ?>
+            <form id="myForm" name="userRegistration" action='userRegistration' method="post">
 
-        <form name="userRegistration" action='userRegistration' method="post">
+                <label>Name</label><b style="color: red;">*</b>:<br><input type="text" name="user_name" id="group_name" placeholder="User Name" style="width:350px" required/><br>
+                <label>Email Id</label><b style="color: red;">*</b>:<br><input type="email"  name="user_email" id="email_id" placeholder="Email Id" style="width:350px" required/><br>
+                <label>Password</label><b style="color: red;">*</b>:<br><input id="password" name="password" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" style="width:350px" required><br>
+                <label>Confirm Password</label><b style="color: red;">*</b>:<br><input id="cpassword" name="c_password" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" style="width:350px" required><br>
+                <label>Mobile:</label><br><input type="tel" name="user_mobile" style="width:350px"><br>
+                <p><input type="checkbox" id="field_terms" onchange="this.setCustomValidity(validity.valueMissing ? 'Please indicate that you accept the Terms and Conditions' : '');" name="check" value="check" required >I accept <a href="..\Admin\termsandcondition">Terms and Conditions</a></p>
+                <input type="submit" id="submit" value="Register" />
+            </form>
 
-            <label>Name</label><b style="color: red;">*</b>:<br><input type="text" name="user_name" id="group_name" placeholder="User Name" style="width:350px" required/><br>
-            <label>Email Id</label><b style="color: red;">*</b>:<br><input type="email"  name="user_email" id="email_id" placeholder="Email Id" style="width:350px" required/><br>
-            <label>Password</label><b style="color: red;">*</b>:<br><input id="password" name="password" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" style="width:350px" required><br>
-            <label>Confirm Password</label><b style="color: red;">*</b>:<br><input id="cpassword" name="c_password" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" style="width:350px" required><br>
-            <label>Mobile:</label><br><input type="tel" name="user_mobile" style="width:350px"><br>
-            <p><input type="checkbox" id="field_terms" onchange="this.setCustomValidity(validity.valueMissing ? 'Please indicate that you accept the Terms and Conditions' : '');" name="check" value="check" required >I accept <a href="..\Admin\termsandcondition">Terms and Conditions</a></p>
-            <input type="submit" id="submit" value="Register" />
-        </form>
-    </section>
+        </section>
     </div>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <footer>
-         <?php echo $this->element('../Pages/footer1'); ?>
+        <?php echo $this->element('../Pages/footer1'); ?>
     </footer>
 </body>
 </html>  

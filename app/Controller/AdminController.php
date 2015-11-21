@@ -1,6 +1,8 @@
 <?php
 
 App::uses('AppController', 'Controller');
+App::uses('Security', 'Utility');
+App::uses('CakeEmail', 'Network/Email');
 
 class AdminController extends AppController {
 
@@ -13,18 +15,32 @@ class AdminController extends AppController {
         $curtm = date(" H:i:s", time());
         //date('Y-m-d H:i:s');
         $todaydate = date("d/m/Y", strtotime($curtm));
-//        echo "<pre>";
-//        print_r($curtm);
-//        die();
-        //set group_id in session for delete group.
-        $session_group_id = 1;
-        $this->set('group_id', $session_group_id);
 
+        //session
+        $session_group_id = CakeSession::read('session_id');
+        $session_group_name = CakeSession::read('session_name');
+        $session_group_code = CakeSession::read('session_code');
+        $session_group_admin_email = CakeSession::read('session_email');
+
+        if (empty($session_group_id)) {
+            $this->redirect('../login/home');
+        }
+        // display group admin profile
+        $this->loadModel('CreateGroup');
+        $groupInfo = $this->CreateGroup->find('first', array(
+            'conditions' => array('CreateGroup.group_id' => $session_group_id)));
+        $this->set('groupInfo', $groupInfo);
+
+//        echo'<pre>';
+//        print_r($groupInfo);
+//        die();
         // display group type
         $this->displayGroupType();
+
         // display group categories
         $this->loadModel('Category');
         $groupcategories = $this->Category->find('all', array(
+            'conditions' => array('Category.group_id' => $session_group_id),
             'order' => array('Category.category_name' => 'asc')));
 
         foreach ($groupcategories AS $arr => $value) {
@@ -33,22 +49,28 @@ class AdminController extends AppController {
             $db_category_name = trim($value['Category']['category_name']);
             $groupCateoriesList[$db_category_id] = $db_category_name;
         }
-
-        $this->set('groupCateoriesList', $groupCateoriesList);
-
+        if (!empty($groupCateoriesList)) {
+            $this->set('groupCateoriesList', $groupCateoriesList);
+        }
         // display group campaign
         $this->loadModel('Campaign');
-        $groupcampaigns = $this->Campaign->find('all');
+        $groupcampaigns = $this->Campaign->find('all', array(
+            'conditions' => array('Campaign.group_id' => $session_group_id)));
         $this->set('groupCampaignsList', $groupcampaigns);
 
         //display join group request
-        $session_group_code = 'IDCLK';
-
         $this->loadModel('JoinGroup');
         $joinGroupRequest = $this->JoinGroup->find('all', array(
             'conditions' => array('group_code' => $session_group_code)));
-       
+
         $this->set('JoinGroupRequest', $joinGroupRequest);
+
+        //count no of ideas
+        $this->loadModel('Ideas');
+        $Total_Ideas = $this->Ideas->find('all', array(
+            'conditions' => array('group_id' => $session_group_id)));
+        $count = sizeof($Total_Ideas);
+        $this->set('TotalIdeas', $count);
     }
 
     public function termsandcondition() {
@@ -74,8 +96,8 @@ class AdminController extends AppController {
         $this->loadModel('CreateGroup');
         $result = $this->request->data;
         $error = $this->CreateGroup->validation($result);
-//        echo "<pre>";
-//                print_r($error);die();
+        $key = 'iznWsaal5lKhOKu4f7f0YagKW81ClEBXqVuTjrFovrXXtOggrqHdDJqkGXsQpHf';
+//      
         if ($error === '') {
             $groupname = trim($this->request->data['group_name']);
             $groupcode = trim($this->request->data['group_code']);
@@ -84,7 +106,8 @@ class AdminController extends AppController {
             $password = trim($this->request->data['password']);
             $cpassword = trim($this->request->data['c_password']);
             $group_status = $this->request->data['group_status'];
-            
+            // Encrypt your text with my_key
+            $encrypted_password = Security::cipher($password, $key);
             if ($group_status == '') {
                 $group_status = 'close';
             }
@@ -94,7 +117,10 @@ class AdminController extends AppController {
                 $this->loadModel('GetRegisteredGroupData');
                 $group_info = $this->GetRegisteredGroupData->find('all');
 
-                foreach ($group_info AS $arr => $value) {
+                $this->loadModel('User');
+                $userInfo = $this->User->find('all');
+
+                foreach ($group_info AS $value) {
 
                     $group_admin_email = trim($value['GetRegisteredGroupData']['group_admin_email']);
 
@@ -103,19 +129,36 @@ class AdminController extends AppController {
                         break;
                     }
                 }
+                foreach ($userInfo AS $value) {
+
+                    $user_email = trim($value['User']['user_email']);
+
+                    if ($user_email == $groupadminemail) {
+                        $flag = false;
+                        break;
+                    }
+                }
                 if ($flag == true) {
                     if ($this->CreateGroup->save(array('group_name' => $groupname, 'group_code' => $groupcode,
                                 'group_type' => $grouptype, 'group_admin_email' => $groupadminemail,
-                                'password' => $password, 'c_password' => $cpassword, 'group_status' =>$group_status))) {
-                        $this->Session->write('message', 'Registration successful');
-                        $this->redirect('../Admin/create_group');
+                                'password' => $encrypted_password, 'group_status' => $group_status))) {
+
+                        $result = $this->CreateGroup->find('first', array(
+                            'conditions' => array('CreateGroup.group_admin_email' => $groupadminemail)));
+                        //session
+                        CakeSession::write('session_id', $result['CreateGroup']['group_id']);
+                        CakeSession::write('session_name', $groupname);
+                        CakeSession::write('session_code', $groupcode);
+                        CakeSession::write('session_email', $groupadminemail);
+
+                        $this->redirect('../Admin/group_profile');
                     } else {
-                        $this->Session->write('message', 'Registration unsuccessful');
+                        $this->Session->write('group_reg_message', 'Registration unsuccessful');
                         $this->Session->delete($name);
                         $this->redirect('../Admin/create_group');
                     }
                 } else {
-                    $this->Session->write('message', 'Already registered');
+                    $this->Session->write('group_reg_message', 'Already registered');
                     $this->redirect('../Admin/create_group');
                 }
             }
@@ -127,26 +170,82 @@ class AdminController extends AppController {
 
     /* Edit Profile */
 
-    public function editGroupProfile() {
+    public function updateGroupProfile() {
         $this->loadModel('CreateGroup');
 
+        $groupId = trim($this->request->data['group_id']);
         $groupname = trim($this->request->data['group_name']);
         $groupcode = trim($this->request->data['group_code']);
         $grouptype = trim($this->request->data['group_type']);
         $groupadminemail = trim($this->request->data['group_admin_email']);
+        $contactNo = trim($this->request->data['contact_no']);
+        $address = trim($this->request->data['address']);
+        $country = trim($this->request->data['country']);
+        $state = trim($this->request->data['state']);
+        $city = trim($this->request->data['city']);
+        $pincode = trim($this->request->data['pincode']);
+
+        if ($this->CreateGroup->updateAll(array('group_name' => "'$groupname'",
+                    'group_code' => "'$groupcode'", 'group_type' => "'$grouptype'",
+                    'group_admin_email' => "'$groupadminemail'", 'contact_no' => "'$contactNo'"
+                    , 'address' => "'$address'", 'country' => "'$country'", 'state' => "'$state'",
+                    'city' => "'$city'", 'pincode' => "'$pincode'"), array('group_id' => $groupId))) {
+
+            $this->Session->write('message', 'Your profile updated successful');
+            $this->redirect('../Admin/change_password');
+        } else {
+            $this->Session->write('message', 'Your profile not updated');
+            $this->redirect('../Admin/group_profile');
+        }
+    }
+
+    /* Display change password page */
+
+    public function change_password() {
+        $this->layout = '';
+        //session
+        $session_group_id = CakeSession::read('session_id');
+        if (empty($session_group_id)) {
+            $this->redirect('../login/home');
+        }
+        $this->loadModel('CreateGroup');
+        $groupInfo = $this->CreateGroup->find('first', array(
+            'conditions' => array('CreateGroup.group_id' => $session_group_id)));
+        $this->set('groupInfo', $groupInfo);
+    }
+
+    /* post change password */
+
+    public function changePassword() {
+        $this->loadModel('CreateGroup');
+        $key = 'iznWsaal5lKhOKu4f7f0YagKW81ClEBXqVuTjrFovrXXtOggrqHdDJqkGXsQpHf';
+        $userId = trim($this->request->data['group_id']);
+        $password = trim($this->request->data['password']);
+        $cpassword = trim($this->request->data['c_password']);
+        $encrypted_password = Security::cipher($password, $key);
+        if ($password == $cpassword) {
+            if ($this->CreateGroup->updateAll(array('password' => "'$encrypted_password'"), array('user_id' => $userId))) {
+                $this->Session->write('pcmessage', 'password changed successfully');
+                $this->redirect('../Admin/change_password');
+            } else {
+                $this->Session->write('pcmessage', 'Password not changed');
+                $this->redirect('../Admin/change_password');
+            }
+        } else {
+            $this->Session->write('pcmessage', 'password and confirm pasword different');
+            $this->redirect('../Admin/change_password');
+        }
     }
 
     /* Delete Group */
 
     public function deleteGroup() {
-
         $this->loadModel('CreateGroup');
+        $session_group_id = CakeSession::read('session_id');
 
-        $groupId = trim($this->request->data['group_id']);
-
-        if ($this->CreateGroup->delete(array('group_id' => $groupId))) {
+        if ($this->CreateGroup->delete(array('group_id' => $session_group_id))) {
             $this->Session->write('message', 'Group deleted');
-            $this->redirect('../Admin/group_profile');
+            $this->redirect('../Login/home');
         } else {
             $this->Session->write('message', 'Group can not deleted');
             $this->redirect('../Admin/group_profile');
@@ -162,12 +261,14 @@ class AdminController extends AppController {
         $error = $this->Category->validation($result);
         if ($error === '') {
             $category_name = trim($this->request->data['category_name']);
-            $session_group_id = 1;
+            $session_group_id = CakeSession::read('session_id');
+
             if (!empty($result)) {
 
                 $flag = true;
                 $this->loadModel('Category');
-                $groupcategories = $this->Category->find('all');
+                $groupcategories = $this->Category->find('all', array(
+                    'conditions' => array('Category.group_id' => $session_group_id)));
 
                 foreach ($groupcategories AS $arr => $value) {
 
@@ -225,7 +326,7 @@ class AdminController extends AppController {
             $campaign_name = trim($this->request->data['campaign_name']);
             $start_date = trim($this->request->data['start_date']);
             $end_date = trim($this->request->data['end_date']);
-            $session_group_id = 1;
+            $session_group_id = CakeSession::read('session_id');
             echo 'cname' . $campaign_name;
             echo 'sdate' . $start_date;
             echo 'enddate' . $end_date;
@@ -305,11 +406,173 @@ class AdminController extends AppController {
             $status = "Accepted";
             $this->JoinGroup->updateAll(array('status' => "'$status'"), array('request_id' => $requestId));
             $this->redirect('../Admin/group_profile');
-        } else if ($buttonValue == 'Reject'){
+        } else if ($buttonValue == 'Reject') {
             $status = "Rejected";
             $this->JoinGroup->updateAll(array('status' => "'$status'"), array('request_id' => $requestId));
             $this->redirect('../Admin/group_profile');
         }
+    }
+
+    public function view_ideas() {
+        $this->layout = '';
+        $this->loadModel('IdeaModel');
+        $session_group_id = CakeSession::read('session_id');
+        if (empty($session_group_id)) {
+            $this->redirect('../login/home');
+        }
+        $allIdeas = $this->IdeaModel->find('all', array('conditions' => array('group_id' => $session_group_id)));
+        $this->set('allIdeas', $allIdeas);
+
+        /* display ideas categories */
+        $this->displayCategories();
+    }
+
+    public function view_single_idea($id = null) {
+        $this->layout = '';
+        $this->loadModel('IdeaModel');
+        if (!empty($this->params['url']['id'])) {
+            $id = $this->params['url']['id'];
+
+            $idea = $this->IdeaModel->find('first', array(
+                'conditions' => array('IdeaModel.idea_id' => $id)));
+            $this->set('Idea', $idea);
+        }
+        $this->layout = 'ajax';
+        $this->loadModel('LikeDislikeStatus');
+
+        $condition1 = array(
+            'conditions' => array(
+                'and' => array(
+                    'LikeDislikeStatus.idea_id' => $id,
+                    'LikeDislikeStatus.like_dislike_status' => 1)));
+
+        $likes = $this->LikeDislikeStatus->find('all', $condition1);
+        $likeCount = sizeof($likes);
+        $this->set('likes', $likeCount);
+
+        $condition2 = array(
+            'conditions' => array(
+                'and' => array(
+                    'LikeDislikeStatus.idea_id' => $id,
+                    'LikeDislikeStatus.like_dislike_status' => 0)));
+
+        $dislikes = $this->LikeDislikeStatus->find('all', $condition2);
+        $dislikeCount = sizeof($dislikes);
+        $this->set('dislikes', $dislikeCount);
+
+        // display all comments
+        $this->loadModel('CommentModel');
+        $commentList = $this->CommentModel->find('all', array(
+            'conditions' => array('parent_idea_id' => $id)));
+        $this->set('comments', $commentList);
+    }
+
+    /* Like idea */
+
+    public function like_idea() {
+        $this->layout = 'ajax';
+        $idea_id = $_POST['ideaId'];
+        $like_count = $_POST['likeCount'];
+
+        $this->loadModel('LikeDislikeStatus');
+        $this->loadModel('IdeaModel');
+
+        $like_count++;
+        $session_userId = CakeSession::read('session_id');
+
+        $opts = array(
+            'conditions' => array(
+                'and' => array(
+                    'LikeDislikeStatus.user_id' => $session_userId,
+                    'LikeDislikeStatus.idea_id' => $idea_id)));
+
+        $getLikeDislikeStatusFromDb = $this->LikeDislikeStatus->find('first', $opts);
+        if (!empty($getLikeDislikeStatusFromDb)) {
+            if ($getLikeDislikeStatusFromDb['LikeDislikeStatus']['like_dislike_status']) {
+                $this->redirect('../Admin/view_single_idea');
+            } else {
+
+                $this->LikeDislikeStatus->updateAll(array('like_dislike_status' => 1), array('AND' => array('LikeDislikeStatus.user_id' => $session_userId,
+                        'LikeDislikeStatus.idea_id' => $idea_id)));
+
+                $this->redirect('../Admin/view_single_idea');
+            }
+        } else {
+
+            $this->LikeDislikeStatus->save(array('user_id' => $session_userId, 'idea_id' => $idea_id,
+                'like_dislike_status' => 1));
+            $this->redirect('../Admin/view_single_idea');
+        }
+    }
+
+    /* Dislike idea */
+
+    public function dislike_idea() {
+        $this->layout = 'ajax';
+        $idea_id = $_POST['ideaId'];
+        $dislike_count = $_POST['dislikeCount'];
+
+        $this->loadModel('LikeDislikeStatus');
+        $this->loadModel('IdeaModel');
+
+        $dislike_count++;
+        $session_userId = CakeSession::read('session_id');
+
+        $opts = array(
+            'conditions' => array(
+                'and' => array(
+                    'LikeDislikeStatus.user_id' => $session_userId,
+                    'LikeDislikeStatus.idea_id' => $idea_id)));
+
+        $getLikeDislikeStatusFromDb = $this->LikeDislikeStatus->find('first', $opts);
+        if (!empty($getLikeDislikeStatusFromDb)) {
+            if ($getLikeDislikeStatusFromDb['LikeDislikeStatus']['like_dislike_status']) {
+
+                $this->LikeDislikeStatus->updateAll(array('like_dislike_status' => 0), array('AND' => array('LikeDislikeStatus.user_id' => $session_userId,
+                        'LikeDislikeStatus.idea_id' => $idea_id)));
+                $this->redirect('../Admin/view_single_idea');
+            } else {
+                $this->redirect('../Admin/view_single_idea');
+            }
+        } else {
+            $this->LikeDislikeStatus->save(array('user_id' => $session_userId, 'idea_id' => $idea_id,
+                'like_dislike_status' => 0));
+            $this->redirect('../Admin/view_single_idea');
+        }
+    }
+
+    /* delete idea */
+
+    public function deleteIdea() {
+        $this->loadModel('IdeaModel');
+        $idea_id = trim($this->request->data['idea_id']);
+        if ($this->IdeaModel->delete(array('group_id' => $idea_id))) {
+            $this->redirect('../Admin/view_ideas');
+        } else {
+            $this->redirect('../Admin/view_single_idea');
+        }
+    }
+    
+    /* filter Idea */
+
+    public function filter_ideas() {
+        $this->layout = '';
+        $this->loadModel('IdeaModel');
+        $category = $this->params['url']['category'];
+        ;
+        $filterIdeas = $this->IdeaModel->find('all', array('conditions' => array('IdeaModel.idea_category' => $category)));
+
+        $this->set('allIdeas', $filterIdeas);
+        /* display ideas categories */
+        $this->displayCategories();
+    }
+
+    public function displayCategories() {
+        $this->loadModel('Category');
+        $session_group_id = CakeSession::read('session_id');
+        $groupCategoriesList = $this->Category->find('all', array('conditions' => array('group_id' => $session_group_id)), array('order' => array('Category.category_name' => 'asc')));
+
+        $this->set('groupCategoriesList', $groupCategoriesList);
     }
 
 }

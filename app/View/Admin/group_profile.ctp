@@ -1,11 +1,17 @@
 <html>
     <head>
         <style>
-            #header {
-                background-color: #0a0;
+            header {
+                background-color:black;
                 color:white;
                 text-align:center;
-                padding:3px;
+                padding:1px; 
+            }
+            footer {
+                background-color:black;
+                color:white;
+                text-align:left;
+                padding:1px; 
             }
             nav {
                 line-height:30px;
@@ -24,13 +30,14 @@
             }
 
         </style>
-       
+
         <title>Group Profile</title>
     </head>
     <body>
-        <div id="header">
+        <header>
             <h3>View Profile</h3>
-        </div>
+            <?php echo $this->element('../Pages/admin_header'); ?>
+        </header>
         <table width="100%" border="1">
             <tr valign="top">
                 <td bgcolor="#aaa" align="center" width="30%">
@@ -38,9 +45,9 @@
                         <table>
                             <tr>
                                 <td>
-                                    <label>Total Ideas:</label>100<br>
-                                    <label>Mobile :</label>10<br>
-                                    <label>Healthcare:</label>20<br>  
+                                    <label>Total Ideas:</label><?php echo $TotalIdeas; ?><br>
+                                    <label>Mobile :</label><br>
+                                    <label>Healthcare:</label><br>  
                                 </td>
                             </tr>
                         </table> 
@@ -58,14 +65,14 @@
                                     <td>
                                         <form name="joinGroupStatus" action="joinGroupStatus" method="post">
                                             <input type="hidden" name="request_id" value="<?php echo $row['JoinGroup']['request_id']; ?>">
-                                        <?php if($row['JoinGroup']['status'] == "Accepted"){?>
+                                            <?php if ($row['JoinGroup']['status'] == "Accepted") { ?>
                                                 <input type="submit" name="button_value" value="Reject">
-                                        <?php }else if($row['JoinGroup']['status'] == "Rejected"){?>
+                                            <?php } else if ($row['JoinGroup']['status'] == "Rejected") { ?>
                                                 <input type="submit" name="button_value" value="Accept">
-                                        <?php }else{?>
-                                            <input type="submit" name="button_value" value="Accept">
-                                            <input type="submit" name="button_value" value="Reject">
-                                        <?php }?>    
+                                            <?php } else { ?>
+                                                <input type="submit" name="button_value" value="Accept">
+                                                <input type="submit" name="button_value" value="Reject">
+                                            <?php } ?>    
                                         </form>
                                     </td> 
                                 </tr>
@@ -78,13 +85,15 @@
                         <table align="left">
                             <tr>
                                 <td>
-                                    <form name="editGroupProfile" enctype="multipart/form-data" action="editGroupProfile" method="post">
+                                    <form name="updateGroupProfile" enctype="multipart/form-data" action="updateGroupProfile" method="post">
+                                        <input type="hidden" name="group_id" value="<?php echo $groupInfo['CreateGroup']['group_id']; ?>">
                                         <input type="text" name="image" style="height: 100px;width: 85px"><br>
                                         <input type="file" name="profile_image"><br>
-                                        <label>Group Name:</label><br><input type="text" name="group_name" value="" id="group_name" style=" height:20px; width:200px "/><br>
-                                        <label>Group Code :</label><br><input type="text" name="group_code" value="" id="group_code" style=" height:20px; width:200px"/><br>
+                                        <label>Group Name:</label><br><input type="text" name="group_name" value="<?php echo $groupInfo['CreateGroup']['group_name']; ?>" id="group_name" style=" height:20px; width:200px "/><br>
+                                        <label>Group Code :</label><br><input type="text" name="group_code" value="<?php echo $groupInfo['CreateGroup']['group_code']; ?>" id="group_code" style=" height:20px; width:200px"/><br>
                                         <label>Group Type:</label><br>
-                                        <select name="ideas_category" style=" height:20px; width:200px" >
+                                        <select name="group_type" style=" height:20px; width:200px" >
+                                            <option><?php echo $groupInfo['CreateGroup']['group_type']; ?> </option>
                                             <option value="">Select Group Type</option>
                                             <?php foreach ($groupTypes as $row): ?>
                                                 <option value ="<?php echo $row['SelectGroupType']['type']; ?>">
@@ -92,28 +101,26 @@
                                                 </option>
                                             <?php endforeach; ?>
                                         </select><br>
-                                        <label>Email Id:</label><br><input type="email" name="group_admin_email" id="email_id" style="height:20px; width:200px" required/><br>
-                                        <label>Contact No:</label><br><input type="tel" name="contact_no" id="contact_no" style="height:20px; width:200px" required/><br>
-                                        <label>Address :</label><br><input type="text" name="contact_no" id="address" style="height:100px; width:200px"><br>
+                                        <label>Email Id:</label><br><input type="email" name="group_admin_email" id="email_id" value="<?php echo $groupInfo['CreateGroup']['group_admin_email']; ?>"style="height:20px; width:200px" required/><br>
+                                        <label>Contact No:</label><br><input type="tel" name="contact_no" id="contact_no" value="<?php echo $groupInfo['CreateGroup']['contact_no']; ?>" style="height:20px; width:200px" required/><br>
+                                        <label>Address :</label><br><textarea name="address" id="address" value="<?php echo $groupInfo['CreateGroup']['address']; ?>" style="height:100px; width:200px"></textarea><br>
                                         <label>Country</label><label style="margin-left: 60px">State</label><br>
-                                        <select style="height :35%; width: 40%"><option>Select</option><option>India</option><option>USA</option></select>
-                                        <select style="height :35%; width: 40%"><option>Select</option><option>Maharashtra</option><option>Gujrat</option></select><br>
+                                        <select name="country" style="height :35%; width: 40%"><option><?php echo $groupInfo['CreateGroup']['country']; ?> </option><option>Select</option><option>India</option><option>USA</option></select>
+                                        <select name="state" style="height :35%; width: 40%"><option>Select</option><option><?php echo $groupInfo['CreateGroup']['state']; ?> </option><option>Maharashtra</option><option>Gujrat</option></select><br>
                                         <label>City</label><label style="margin-left: 32%">Pin Code</label><br>
-                                        <select style="height :35%; width: 40%"><option>Select</option><option>Pune</option><option>Mumbai</option></select>
-                                        <input type="text" name="pincode" id="pincode" placeholder="pin code" style="height :30%; width: 40%"><br><br>
+                                        <select name="city" style="height :35%; width: 40%"><option><?php echo $groupInfo['CreateGroup']['city']; ?> </option><option>Select</option><option>Pune</option><option>Mumbai</option></select>
+                                        <input type="text" name="pincode" id="pincode" value="<?php echo $groupInfo['CreateGroup']['pincode']; ?>" placeholder="pin code" style="height :30%; width: 40%"><br><br>
                                         <input type="submit" style="height:25px; width:60px; background-color: #0a0" value="Save">
                                     </form>
                                 </td> 
-
                             </tr>
-
                         </table> 
                     </div>
                 </td>
                 <td bgcolor="#aaa" width="30%">
+                    <div style="margin-left: 30%"><a class="button" href="../Admin/change_password">change password</a></div><br>
                     <div align="center">
                         <form name="deleteGroup" action="deleteGroup" method="post">
-                            <input type="hidden" name="group_id" value="<?php echo $group_id; ?>" />
                             <input type="submit" style="height: 50px;width: 100px; background-color: #0a0" value="Delete Group">
                         </form>
                     </div>
@@ -124,7 +131,7 @@
                                 <td>
                                     <form name="addCategory" action="addCategory" method="post">
                                         <label>Category</label><br>
-                                        <input type="text" name="category_name" id="category" style="height:20px; width:200px "/>
+                                        <input type="text" name="category_name" id="category" style="height:20px; width:200px " required/>
                                         <input type="submit" style="height:25px; width:60px; background-color: #0a0" value="Add">
                                     </form>
                                 </td>
@@ -134,23 +141,25 @@
 
                     <div>
                         <table  border="1" class="tableborder">
-                            <?php foreach ($groupCateoriesList AS $arr => $value): ?>
-                                <tr>
-                                    <th>
-                                        <?php echo $value; ?>
+                            <?php if (!empty($groupCateoriesList)) {
+                                foreach ($groupCateoriesList AS $arr => $value): ?>
+                                    <tr>
+                                        <th>
+        <?php echo $value; ?>
+                                        </th>
+                                        <th>
+                                    <form name="" action="" method="post">
+                                        <input type="hidden" name="category_id" value="<?php echo $arr; ?>" />
+                                        <input type="submit" style="height:25px; width:60px; margin-left:20px; background-color: #0a0" value="Edit">
+                                    </form>
+                                    <form name="deleteCategory" action="deleteCategory" method="post">
+                                        <input type="hidden" name="category_id" value="<?php echo $arr; ?>" />
+                                        <input type="submit" style="height:25px; width:60px; margin-left:20px; background-color: #0a0" value="Delete" onclick="return confirm('Are you sure you want to delete this category?')">
+                                    </form>
                                     </th>
-                                    <th>
-                                <form name="" action="" method="post">
-                                    <input type="hidden" name="category_id" value="<?php echo $arr; ?>" />
-                                    <input type="submit" style="height:25px; width:60px; margin-left:20px; background-color: #0a0" value="Edit">
-                                </form>
-                                <form name="deleteCategory" action="deleteCategory" method="post">
-                                    <input type="hidden" name="category_id" value="<?php echo $arr; ?>" />
-                                    <input type="submit" style="height:25px; width:60px; margin-left:20px; background-color: #0a0" value="Delete" onclick="return confirm('Are you sure you want to delete this category?')">
-                                </form>
-                                </th>
-                                </tr>
-                            <?php endforeach; ?>
+                                    </tr>
+    <?php endforeach;
+} ?>
                         </table>
                     </div>
                     <h4 align="center">Create Campaign</h4>
@@ -160,10 +169,10 @@
                                 <td>
                                     <form name="createCampaign" action="createCampaign" method="post">
                                         <label>Campaign Name</label>
-                                        <input type="text" name="campaign_name" id="campaign" style="height:20px; width:99%"/>
+                                        <input type="text" name="campaign_name" id="campaign" style="height:20px; width:99%" required />
                                         <label>Start Date</label><label style="margin-left: 32%">End Date</label><br>
-                                        <input name="start_date" type="datetime-local" style="height :30%; width: 45%">
-                                        <input name="end_date" type="datetime-local" style="height :30%; width: 45%"><br>
+                                        <input name="start_date" type="datetime-local" style="height :30%; width: 45%" required />
+                                        <input name="end_date" type="datetime-local" style="height :30%; width: 45%" required /><br>
                                         <input type="submit" style="height:25px; width:60px; background-color: #0a0" value="Create">
                                     </form>
                                 </td>
@@ -179,7 +188,7 @@
                                 <th>Status</th>
 
                             </tr>
-                            <?php foreach ($groupCampaignsList as $row): ?>
+                                    <?php foreach ($groupCampaignsList as $row): ?>
                                 <tr>
                                     <th>
                                         <?php echo $row['Campaign']['campaign_name']; ?>
@@ -191,7 +200,7 @@
                                         <?php echo $row['Campaign']['end_date']; ?>
                                     </th>
                                     <th>
-                                        <?php echo $row['Campaign']['status']; ?>
+    <?php echo $row['Campaign']['status']; ?>
                                     </th>
                                     <th>
                                 <form name="edit_campaign" action="edit_campaign" method="post">
@@ -204,11 +213,14 @@
                                 </form>
                                 </th>
                                 </tr>
-                            <?php endforeach; ?>
+<?php endforeach; ?>
                         </table>
                     </div>
                 </td>
             </tr>
             <table>
+                <footer>
+<?php echo $this->element('../Pages/footer1'); ?>
+                </footer>
                 </body>
                 </html
