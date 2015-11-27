@@ -9,7 +9,7 @@ class PasswordController extends AppController {
         $this->loadModel('Login');
     }
     
-    public function forgetPassword(){
+    public function forgotPassword(){
         $this->loadModel('Login');
         $result = $this->request->data;
         $error = $this->Login->validation($result);

@@ -48,7 +48,7 @@ class IdeasController extends AppController {
         /* display request accepted group ideas */
 
         $this->loadModel('JoinGroup');
-        $status = "Activated";
+        $status = "Accepted";
         //find group name which is belongs to user id
         $condition1 = array(
             'conditions' => array(
@@ -72,7 +72,8 @@ class IdeasController extends AppController {
             'conditions' => array(
                 'IN' => array('group_name' => array('cognizant'))));
 
-        $allIdeas = $this->IdeaModel->find('all');
+        $allIdeas = $this->IdeaModel->find('all',array(
+            'order'=>array('IdeaModel.idea_id' =>'desc')));
         $this->set('allIdeas', $allIdeas);
     }
 
@@ -238,7 +239,7 @@ class IdeasController extends AppController {
         /* display join group */
         $this->loadModel('JoinGroup');
         $session_user_id = CakeSession::read('session_id');
-        $status = "Activated";
+        $status = "Accepted";
         $opts = array(
             'conditions' => array(
                 'and' => array(

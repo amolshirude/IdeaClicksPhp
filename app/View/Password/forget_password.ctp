@@ -2,13 +2,13 @@
 <head>
     <style>
     header {
-        background-color:black;
+        background-color:#068097;
         color:white;
         text-align:center;
         padding:1px; 
     }
     footer {
-                 background-color:black;
+                 background-color:#068097;
                 color:white;
                 text-align:left;
                 padding:1px; 
@@ -17,13 +17,13 @@
     <title></title>
 </head>
 <body>
-<div><header><h3>Forget Password</h3>
+<div><header><h3>Forgot Password</h3>
             <?php echo $this->element('../Pages/header2'); ?>
         </header>  </div><br>
 <div>
-    <form name="forgetpassword" action="forgetPassword" method="post">
+    <form name="forgotpassword" action="forgotPassword" method="post">
         <label>Email Id:</label><br><input type="email" name="email" required>
-        <input type="submit" value="submit">
+        <input type="submit" value="Submit">
     </form>
 </div>
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>

@@ -1,30 +1,4 @@
-<html>
-    <head>
-        <style type="text/css">
-            header {
-                background-color:black;
-                color:white;
-                text-align:center;
-                padding:1px; 
-            }
-            footer {
-                background-color:black;
-                color:white;
-                text-align:left;
-                padding:1px; 
-            }
-            .box {
-                font-size: 15px;
-                font-family: 'Titillium Web', sans-serif;
-                color :#000000;
-            }
-            button{
-                background-color: #025776;
-                color: #FFFFFF;
-                height: 30px;
-                font-weight: bold;
-            }
-        </style>
+<?php echo $this->element('../Pages/init'); ?>
         <script type="text/javascript">
             function check() {
                 if("<?php echo $Idea['IdeaModel']['idea_status']; ?>" == "private"){
@@ -37,10 +11,10 @@
         <header>
             <h3>Update Your Idea</h3>
             <?php echo $this->element('../Pages/header1'); ?>
-        </header><br>
+        </header>
         <table width="100%" border="1">
             <tr valign="top">
-                <td bgcolor="#b5dcb3" >
+                <td bgcolor="#9BDBDE">
                     <div align="left">
                         <form name="updateIdea" action="updateIdea" method="post">
                             <input type="hidden" name="idea_id" value="<?php echo $Idea['IdeaModel']['idea_id']; ?>"/>
@@ -76,12 +50,12 @@
 
                                 <input type="checkbox" name="idea_status" id="idea_status" value="private">Confidential
                             </div><br>
-                            <div class="button" style="margin-left: auto; margin-right: auto;">
-                                <input type="submit" value="Update">
+                            <div style="margin-left: auto; margin-right: auto;">
+                                <input type="submit" class="buttonclass" value="Update">
                             </div><br>
                         </form>
                     </div></td></table>
-        <br><br>
+        
         <footer>
             <?php echo $this->element('../Pages/footer1'); ?>
         </footer>

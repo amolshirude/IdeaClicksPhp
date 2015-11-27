@@ -3,13 +3,13 @@
 
         <style>
             header {
-                background-color:black;
+                background-color:#068097;
                 color:white;
                 text-align:center;
                 padding:1px; 
             }
             footer {
-                background-color:black;
+                background-color:#068097;
                 color:white;
                 text-align:left;
                 padding:1px; 

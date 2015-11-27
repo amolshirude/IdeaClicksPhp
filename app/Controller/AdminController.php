@@ -31,9 +31,6 @@ class AdminController extends AppController {
             'conditions' => array('CreateGroup.group_id' => $session_group_id)));
         $this->set('groupInfo', $groupInfo);
 
-//        echo'<pre>';
-//        print_r($groupInfo);
-//        die();
         // display group type
         $this->displayGroupType();
 
@@ -68,7 +65,7 @@ class AdminController extends AppController {
         //count no of ideas
         $this->loadModel('Ideas');
         $Total_Ideas = $this->Ideas->find('all', array(
-            'conditions' => array('group_id' => $session_group_id)));
+            'conditions' => array('group_name' => $session_group_name)));
         $count = sizeof($Total_Ideas);
         $this->set('TotalIdeas', $count);
     }
@@ -192,7 +189,7 @@ class AdminController extends AppController {
                     'city' => "'$city'", 'pincode' => "'$pincode'"), array('group_id' => $groupId))) {
 
             $this->Session->write('message', 'Your profile updated successful');
-            $this->redirect('../Admin/change_password');
+            $this->redirect('../Admin/group_profile');
         } else {
             $this->Session->write('message', 'Your profile not updated');
             $this->redirect('../Admin/group_profile');
@@ -219,12 +216,12 @@ class AdminController extends AppController {
     public function changePassword() {
         $this->loadModel('CreateGroup');
         $key = 'iznWsaal5lKhOKu4f7f0YagKW81ClEBXqVuTjrFovrXXtOggrqHdDJqkGXsQpHf';
-        $userId = trim($this->request->data['group_id']);
+        $groupId = trim($this->request->data['group_id']);
         $password = trim($this->request->data['password']);
         $cpassword = trim($this->request->data['c_password']);
         $encrypted_password = Security::cipher($password, $key);
         if ($password == $cpassword) {
-            if ($this->CreateGroup->updateAll(array('password' => "'$encrypted_password'"), array('user_id' => $userId))) {
+            if ($this->CreateGroup->updateAll(array('password' => "'$encrypted_password'"), array('user_id' => $groupId))) {
                 $this->Session->write('pcmessage', 'password changed successfully');
                 $this->redirect('../Admin/change_password');
             } else {
@@ -416,11 +413,11 @@ class AdminController extends AppController {
     public function view_ideas() {
         $this->layout = '';
         $this->loadModel('IdeaModel');
-        $session_group_id = CakeSession::read('session_id');
-        if (empty($session_group_id)) {
+        $session_group_name = CakeSession::read('session_name');
+        if (empty($session_group_name)) {
             $this->redirect('../login/home');
         }
-        $allIdeas = $this->IdeaModel->find('all', array('conditions' => array('group_id' => $session_group_id)));
+        $allIdeas = $this->IdeaModel->find('all', array('conditions' => array('group_name' => $session_group_name)));
         $this->set('allIdeas', $allIdeas);
 
         /* display ideas categories */
@@ -559,8 +556,14 @@ class AdminController extends AppController {
         $this->layout = '';
         $this->loadModel('IdeaModel');
         $category = $this->params['url']['category'];
-        ;
-        $filterIdeas = $this->IdeaModel->find('all', array('conditions' => array('IdeaModel.idea_category' => $category)));
+        $session_group_name = CakeSession::read('session_name');
+        $opts = array(
+            'conditions' => array(
+                'and' => array(
+                    'IdeaModel.group_name' => $session_group_name,
+                    'IdeaModel.idea_category' => $category)));
+        
+        $filterIdeas = $this->IdeaModel->find('all',$opts);
 
         $this->set('allIdeas', $filterIdeas);
         /* display ideas categories */

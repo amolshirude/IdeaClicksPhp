@@ -3,13 +3,13 @@
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
         <style>
             header {
-                background-color:black;
+                background-color:#068097;
                 color:white;
                 text-align:center;
                 padding:1px; 
             }
             footer {
-                 background-color:black;
+                 background-color:#068097;
                 color:white;
                 text-align:left;
                 padding:1px; 
