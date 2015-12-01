@@ -4,7 +4,7 @@ App::uses('AppController', 'Controller');
 
 class PasswordController extends AppController {
     
-    public function forget_password(){
+    public function forgot_password(){
         $this->layout = '';
         $this->loadModel('Login');
     }
