@@ -61,7 +61,7 @@
                             <form id="group_request_form" action="../Pages/group_page" method="post">
                                 <input type="hidden" id="group_id" name="group_id">
                                 <input type="hidden" id="group_name" name="group_name">
-                                <td><a id="group_name_link" onclick="onSubmit('<?php echo $row['JoinGroup']['group_id']; ?>','<?php echo $row['JoinGroup']['group_name']; ?>')"><?php echo $row['JoinGroup']['group_name']; ?></a></td>
+                                <td><a href="#" id="group_name_link" onclick="onSubmit('<?php echo $row['JoinGroup']['group_id']; ?>','<?php echo $row['JoinGroup']['group_name']; ?>')"><?php echo $row['JoinGroup']['group_name']; ?></a></td>
                                 <td><?php echo $row['JoinGroup']['status']; ?></td> 
                             </form>
                             </tr>

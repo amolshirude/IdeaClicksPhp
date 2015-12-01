@@ -6,7 +6,7 @@ App::uses('Security', 'Utility');
 class loginController extends AppController {
 
     public function home() {
-        $this->layout = '';
+        $this->layout = 'Home_layout';
         $key = 'iznWsaal5lKhOKu4f7f0YagKW81ClEBXqVuTjrFovrXXtOggrqHdDJqkGXsQpHf';
 
         CakeSession::delete('session_id');
