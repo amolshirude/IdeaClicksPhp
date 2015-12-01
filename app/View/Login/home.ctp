@@ -176,15 +176,15 @@
                     <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
                         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                         <span class="sr-only">Next</span>
-                    </a>
+                    </a>.
                 </div>
             </div>
         </frame>
         <br>
         <frame>
             <div align="center">
-                <a  class="myButton" role="button" href="../Admin/create_group"><b>Inviting Ideas</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a  class="myButton" role="button" href="../User/user_registration"><b>Submitting Ideas</b></a>
+                <a  class="myButton" role="button" href="./Admin/create_group"><b>Inviting Ideas</b></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a  class="myButton" role="button" href="./User/user_registration"><b>Submitting Ideas</b></a>
             </div>
             <br>
             <footer>

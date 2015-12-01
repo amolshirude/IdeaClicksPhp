@@ -7,9 +7,7 @@
             <?php echo $this->element('../Pages/admin_header'); ?>
         </header><br>
         <div class="box" style="margin-left: auto; margin-right: auto;">
-		
-			<div class="view-idea-container">
-                            
+			<div class="view-idea-container">                   
 		        	 <?php if(!empty($allIdeas)) { foreach ($allIdeas as $row): ?>
 					<div class="idea-container">
                                                 <label>Title:</label>
@@ -36,7 +34,6 @@
                     </div>
                     </div><br><br>
 			<div class="right-container">
-			
 				<div class="box">
 					<b>Categories</b>
 				</div>
@@ -48,8 +45,6 @@
                                          <?php endforeach; ?>
 				</div>
 			</div>
-		
 	</div>
-	<!-- end of main -->
     </body>
 </html>

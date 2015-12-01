@@ -8,9 +8,7 @@
             <?php echo $this->element('../Pages/admin_header'); ?>
         </header><br>
         <div class="box" style="margin-left: auto; margin-right: auto;">
-
             <div class="view-idea-container">
-
                 <div class="idea-container">
                     <input type="hidden" name="idea_id" id="idea_id" value="<?php echo $Idea['IdeaModel']['idea_id']; ?>">
                     <label>Title:</label>
@@ -30,10 +28,16 @@
                         <form name="deleteIdea" action="deleteIdea" method="post">
                             <input type="hidden" name="idea_id" value="<?php echo $Idea['IdeaModel']['idea_id']; ?>" />
                             <input class="buttonclass" type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this idea?')">
+                            <input type="button" class="buttonclass" value="Back" onClick="history.go(-1);return true;">
                         </form>
                     </div>
                 </div>
             </div>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <br><br><br><br>
+            <footer>
+                <?php echo $this->element('../Pages/footer1'); ?>
+            </footer>
     </body>
 </html>
 <script type="text/javascript">

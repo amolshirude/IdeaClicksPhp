@@ -1,5 +1,4 @@
 <?php
-
 App::uses('ConnectionManager', 'Model');
 App::uses('AppController', 'Controller');
 
@@ -45,6 +44,7 @@ class IdeasController extends AppController {
         
         /* display ideas categ ories */
         $this->displayCategories();
+        
         /* display request accepted group ideas */
 
         $this->loadModel('JoinGroup');
@@ -57,23 +57,20 @@ class IdeasController extends AppController {
                     'JoinGroup.status' => $status)));
         
         $userJoinedGroupList = $this->JoinGroup->find('all', $condition1);
-
-        $groupNameList = '';
-        foreach ($userJoinedGroupList AS $value) {
-
-            if (!empty($groupNameList)) {
-                $groupNameList = $groupNameList . ',' . trim($value['JoinGroup']['group_name']);
-            } else {
-                $groupNameList = trim($value['JoinGroup']['group_name']);
-            }
-        }
+        $inClausStr = '(';
         
-        $condition2 = array(
-            'conditions' => array(
-                'IN' => array('group_name' => array('cognizant'))));
+        if ($userJoinedGroupList) {
+            foreach ($userJoinedGroupList AS $arr => $val) {
+               $inClausStr.="'" . trim($val['JoinGroup']['group_name']) . "',";
+            }
+        } else {
+            $inClausStr.="''";
+        }
 
-        $allIdeas = $this->IdeaModel->find('all',array(
-            'order'=>array('IdeaModel.idea_id' =>'desc')));
+        $inClausStr = trim($inClausStr, ",");
+        $inClausStr.=')';
+
+        $allIdeas = $this->IdeaModel->query("select * from ideas where group_name IN ".$inClausStr."");
         $this->set('allIdeas', $allIdeas);
     }
 
@@ -115,18 +112,6 @@ class IdeasController extends AppController {
         $dislikeCount = sizeof($dislikes);
         $this->set('dislikes', $dislikeCount);
 
-
-//        if (!empty($_POST['likeCount'])) {
-//            $this->layout = 'ajax';
-//            $likeCount = $_POST['likeCount'];
-//            $this->set('likeCount', $likeCount);          
-//        }
-//        
-//        if (!empty($_POST['dislikeCount'])) {
-//            $this->layout = 'ajax';
-//            $likeCount = $_POST['dislikeCount'];
-//            $this->set('dislikeCount', $dislikeCount);          
-//        }
         // display all comments
         $this->loadModel('CommentModel');
         $commentList = $this->CommentModel->find('all', array(
@@ -137,6 +122,7 @@ class IdeasController extends AppController {
     /* Like idea */
 
     public function like_idea() {
+       
         $this->layout = 'ajax';
         $idea_id = $_POST['ideaId'];
         $like_count = $_POST['likeCount'];
@@ -145,6 +131,8 @@ class IdeasController extends AppController {
         $this->loadModel('IdeaModel');
 
         $like_count++;
+       
+        
         $session_userId = CakeSession::read('session_id');
 
         $opts = array(
@@ -156,20 +144,37 @@ class IdeasController extends AppController {
         $getLikeDislikeStatusFromDb = $this->LikeDislikeStatus->find('first', $opts);
         if (!empty($getLikeDislikeStatusFromDb)) {
             if ($getLikeDislikeStatusFromDb['LikeDislikeStatus']['like_dislike_status']) {
-                $this->redirect('../Ideas/like_dislike_comment');
+                
             } else {
 
                 $this->LikeDislikeStatus->updateAll(array('like_dislike_status' => 1), array('AND' => array('LikeDislikeStatus.user_id' => $session_userId,
                         'LikeDislikeStatus.idea_id' => $idea_id)));
-
-                $this->redirect('../Ideas/like_dislike_comment');
-            }
+                }
         } else {
 
             $this->LikeDislikeStatus->save(array('user_id' => $session_userId, 'idea_id' => $idea_id,
                 'like_dislike_status' => 1));
-            $this->redirect('../Ideas/like_dislike_comment');
-        }
+            }
+        $condition1 = array(
+            'conditions' => array(
+                'and' => array(
+                    'LikeDislikeStatus.idea_id' => $idea_id,
+                    'LikeDislikeStatus.like_dislike_status' => 1)));
+
+        $likes = $this->LikeDislikeStatus->find('all', $condition1);
+        $likeCount = sizeof($likes);
+        $this->set('likes', $likeCount);
+        
+        $condition2 = array(
+            'conditions' => array(
+                'and' => array(
+                    'LikeDislikeStatus.idea_id' => $idea_id,
+                    'LikeDislikeStatus.like_dislike_status' => 0)));
+
+        $dislikes = $this->LikeDislikeStatus->find('all', $condition2);
+        $dislikeCount = sizeof($dislikes);
+        $this->set('dislikes', $dislikeCount);
+        
     }
 
     /* Dislike idea */
@@ -197,15 +202,34 @@ class IdeasController extends AppController {
 
                 $this->LikeDislikeStatus->updateAll(array('like_dislike_status' => 0), array('AND' => array('LikeDislikeStatus.user_id' => $session_userId,
                         'LikeDislikeStatus.idea_id' => $idea_id)));
-                $this->redirect('../Ideas/like_dislike_comment');
-            } else {
-                $this->redirect('../Ideas/like_dislike_comment');
+                
             }
         } else {
             $this->LikeDislikeStatus->save(array('user_id' => $session_userId, 'idea_id' => $idea_id,
                 'like_dislike_status' => 0));
-            $this->redirect('../Ideas/like_dislike_comment');
-        }
+            }
+        $this->layout = 'ajax';
+        $this->loadModel('LikeDislikeStatus');
+
+        $condition1 = array(
+            'conditions' => array(
+                'and' => array(
+                    'LikeDislikeStatus.idea_id' => $idea_id,
+                    'LikeDislikeStatus.like_dislike_status' => 1)));
+
+        $likes = $this->LikeDislikeStatus->find('all', $condition1);
+        $likeCount = sizeof($likes);
+        $this->set('likes', $likeCount);
+        
+        $condition2 = array(
+            'conditions' => array(
+                'and' => array(
+                    'LikeDislikeStatus.idea_id' => $idea_id,
+                    'LikeDislikeStatus.like_dislike_status' => 0)));
+
+        $dislikes = $this->LikeDislikeStatus->find('all', $condition2);
+        $dislikeCount = sizeof($dislikes);
+        $this->set('dislikes', $dislikeCount);
     }
 
     /* Save comment */
@@ -307,7 +331,6 @@ class IdeasController extends AppController {
                 $status = 'public';
             }
 
-
             if (!empty($result)) {
                 if ($this->IdeaModel->save(array('idea_title' => $title,
                             'idea_description' => $description, 'idea_category' => $category,
@@ -330,10 +353,38 @@ class IdeasController extends AppController {
         $this->layout = '';
         $this->loadModel('IdeaModel');
         $category = $this->params['url']['category'];
-        ;
-        $filterIdeas = $this->IdeaModel->find('all', array('conditions' => array('IdeaModel.idea_category' => $category)));
+        $session_user_id = CakeSession::read('session_id');
+        
+        /* display request accepted group ideas */
 
+        $this->loadModel('JoinGroup');
+        $status = "Accepted";
+        //find group name which is belongs to user id
+        $condition1 = array(
+            'conditions' => array(
+                'and' => array(
+                    'JoinGroup.user_id' => $session_user_id,
+                    'JoinGroup.status' => $status)));
+        
+        $userJoinedGroupList = $this->JoinGroup->find('all', $condition1);
+        
+        $inClausStr = '(';
+        
+        if ($userJoinedGroupList) {
+            foreach ($userJoinedGroupList AS $val) {
+               $inClausStr.="'" . trim($val['JoinGroup']['group_name']) . "',";
+            }
+        } else {
+            $inClausStr.="''";
+        }
+
+        $inClausStr = trim($inClausStr, ",");
+        $inClausStr.=')';
+        
+        $filterIdeas = $this->IdeaModel->query("select * from ideas where group_name IN ".$inClausStr." and idea_category = '$category'" );
+        
         $this->set('allIdeas', $filterIdeas);
+        
         /* display ideas categories */
         $this->displayCategories();
     }
@@ -345,7 +396,5 @@ class IdeasController extends AppController {
             'order' => array('Category.category_name' => 'asc')));
         $this->set('groupCategoriesList', $groupCategoriesList);
     }
-
 }
-
 ?>

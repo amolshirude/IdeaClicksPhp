@@ -68,6 +68,13 @@ class AdminController extends AppController {
             'conditions' => array('group_name' => $session_group_name)));
         $count = sizeof($Total_Ideas);
         $this->set('TotalIdeas', $count);
+        
+        /* display ideas categories */
+        $this->loadModel('Category');
+        $groupCategoriesList = $this->Category->find('all',array('conditions'=>array('group_id'=>$session_group_id)),
+                array('fields'=>array('DISTINCT category_name')) ,
+                array('order' => array('Category.category_name' => 'asc')));
+        $this->set('groupCategoriesList', $groupCategoriesList);
     }
 
     public function termsandcondition() {

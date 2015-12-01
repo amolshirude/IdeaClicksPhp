@@ -78,19 +78,18 @@
         <header>
             <h3>Change Password</h3>
             <?php echo $this->element('../Pages/admin_header'); ?>
-        </header>        
+        </header><br>        
         <br>
-        <table width="100%" border="1">
+        <table>
             <tr valign="top">
-                <td bgcolor="#9BDBDE" >
+                <td bgcolor="lightgrey" >
                     <div align="left">
-
                         <form id="myForm" name="changepassword" action="changePassword" method="post">
                            <input type="hidden" name="group_id" value="<?php echo $groupInfo['CreateGroup']['group_id']; ?>"/>
                             <label>New Password</label>:<br><input id="password" name="password" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" style="height: 25px; width:350px" required /><br>
                             <label>Confirm Password</label>:<br><input id="cpassword" name="c_password" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" style="height: 25px; width:350px"><br><br>
-                            <input type="submit" value="Update">
-                            <input type="reset" value="Reset">
+                            <input type="submit" class="buttonclass" value="Update">
+                            <input type="button" class="buttonclass" value="Back" onClick="history.go(-1);return true;">
                         </form>
                         <?php
                         $message = $this->Session->consume('pcmessage');

@@ -11,7 +11,6 @@
                     <?php if(!empty($allIdeas)){foreach ($allIdeas as $row): ?>
                         <div class="idea-container">
                             <label >Title:</label>
-
                             <a class="idea-tile" href="../Admin/view_single_idea?id=<?php echo $row['IdeaModel']['idea_id']; ?>"><?php echo $row['IdeaModel']['idea_title']; ?></a> 
                             <br>
                             <label>Description:</label><br>
@@ -40,7 +39,6 @@
                         <b>Categories</b>
                     </div>
                     <div class="categories-container">
-
                         <?php if(!empty($groupCategoriesList)) { foreach ($groupCategoriesList as $row): ?>
                             <a class="category" href="../Admin/filter_ideas?category=<?php echo $row['Category']['category_name']; ?>"><?php echo $row['Category']['category_name']; ?></a><br>
                         <?php endforeach; }?>

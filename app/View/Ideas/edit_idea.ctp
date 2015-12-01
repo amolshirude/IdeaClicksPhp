@@ -11,10 +11,10 @@
         <header>
             <h3>Update Your Idea</h3>
             <?php echo $this->element('../Pages/header1'); ?>
-        </header>
-        <table width="100%" border="1">
+        </header><br>
+        <table>
             <tr valign="top">
-                <td bgcolor="#9BDBDE">
+                <td bgcolor="lightgrey">
                     <div align="left">
                         <form name="updateIdea" action="updateIdea" method="post">
                             <input type="hidden" name="idea_id" value="<?php echo $Idea['IdeaModel']['idea_id']; ?>"/>
@@ -46,16 +46,15 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div><br>
-                            <div class="button" style="margin-left: auto; margin-right: auto;">
-
+                            <div style="margin-left: auto; margin-right: auto;">
                                 <input type="checkbox" name="idea_status" id="idea_status" value="private">Confidential
                             </div><br>
                             <div style="margin-left: auto; margin-right: auto;">
                                 <input type="submit" class="buttonclass" value="Update">
+                                <input type="button" class="buttonclass" value="Back" onClick="history.go(-1);return true;">
                             </div><br>
                         </form>
-                    </div></td></table>
-        
+                    </div></td></table>      
         <footer>
             <?php echo $this->element('../Pages/footer1'); ?>
         </footer>

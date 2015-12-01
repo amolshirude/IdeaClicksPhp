@@ -1,22 +1,8 @@
-<html>
-    <head>
-
+ <?php echo $this->element('../Pages/init'); ?>
         <style>
-            header {
-                background-color:#068097;
-                color:white;
-                text-align:center;
-                padding:1px; 
-            }
-            footer {
-                background-color:#068097;
-                color:white;
-                text-align:left;
-                padding:1px; 
-            }
             nav {
                 line-height:30px;
-                background-color:#eeeeee;
+                background-color:#9BDBDE;
                 height:420px;
                 width:200px;
                 float:right;
@@ -172,18 +158,18 @@
             ?>
             <form id="myForm" name="userRegistration" action='userRegistration' method="post">
 
-                <label>Name</label><b style="color: red;">*</b>:<br><input type="text" name="user_name" id="group_name" placeholder="User Name" style="width:350px" required/><br>
-                <label>Email Id</label><b style="color: red;">*</b>:<br><input type="email"  name="user_email" id="email_id" placeholder="Email Id" style="width:350px" required/><br>
-                <label>Password</label><b style="color: red;">*</b>:<br><input id="password" name="password" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" style="width:350px" required><br>
-                <label>Confirm Password</label><b style="color: red;">*</b>:<br><input id="cpassword" name="c_password" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" style="width:350px" required><br>
-                <label>Mobile:</label><br><input type="tel" name="user_mobile" style="width:350px"><br>
-                <p><input type="checkbox" id="field_terms" onchange="this.setCustomValidity(validity.valueMissing ? 'Please indicate that you accept the Terms and Conditions' : '');" name="check" value="check" required >I accept <a href="..\Admin\termsandcondition">Terms and Conditions</a></p>
-                <input type="submit" id="submit" value="Register" />
+                <label>Name</label><b style="color: red;">*</b>:<br><input type="text" class="textbox" name="user_name" id="group_name" placeholder="User Name" style="width:350px" required/><br>
+                <label>Email Id</label><b style="color: red;">*</b>:<br><input type="email" class="textbox" name="user_email" id="email_id" placeholder="Email Id" style="width:350px" required/><br>
+                <label>Password</label><b style="color: red;">*</b>:<br><input id="password" class="textbox" name="password" title="Password must contain at least 6 characters, including UPPER/lowercase and numbers." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Password" style="width:350px" required><br>
+                <label>Confirm Password</label><b style="color: red;">*</b>:<br><input id="cpassword" class="textbox" name="c_password" title="Please enter the same Password as above." type="password" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" placeholder="Confirm Password" style="width:350px" required><br>
+                <label>Mobile:</label><br><input type="tel" class="textbox" name="user_mobile" style="width:350px"><br>
+                <p><input type="checkbox" id="field_terms" onchange="this.setCustomValidity(validity.valueMissing ? 'Please indicate that you accept the Terms and Conditions' : '');" name="check" value="check" required >I accept <b><a style="color: #9BDBDE" href="..\Admin\termsandcondition">Terms and Conditions</a></b></p>
+                <input type="submit" id="submit" class="buttonclass" value="Register" />
             </form>
 
         </section>
     </div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     <footer>
         <?php echo $this->element('../Pages/footer1'); ?>
     </footer>

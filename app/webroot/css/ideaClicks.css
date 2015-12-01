@@ -1,24 +1,29 @@
 header {
-    background-color:#068097;
+    background-color:lightslategray;
     color: #ffffff;
     text-align:center;
     padding:2px; 
 }
 footer {
-    background-color:#068097;
+    background-color:lightslategray;
     color:white;
     text-align:left;
     padding:1px; 
 }
 label {
     color: #000000;
-    font-family : sans-serif;
+  
     display: block;
     float: left;
+}
+.userprofiletd{
+    background: lightgrey;
 }
 table {
     background-color: #ffffff; 
     border-color:#068097;
+    width: 100%;
+    border:0;
 }
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img {
@@ -28,9 +33,10 @@ table {
 }
 .textbox {
     background-color: #ffffff;
-    border:2px solid #456879;
+    
     height: 22px;
     width: 200px;
+    margin-bottom: 5px;
 }
 
 .buttonclass {
@@ -51,7 +57,7 @@ table {
     text-shadow: rgba(0,0,0,.4) 0 1px 0;
     color: white;
     font-size: 10px;
-    font-family: Georgia, serif;
+    font-family: inherit;
     text-decoration: none;
     vertical-align: middle;
 }
@@ -83,7 +89,7 @@ table {
     display:inline-block;
     cursor:pointer;
     color:#ffffff;
-    font-family:Arial;
+    
     font-size:15px;
     padding:19px 13px;
     text-decoration:none;
@@ -105,7 +111,7 @@ table {
 }
 .box {
     font-size: 15px;
-    font-family: 'Titillium Web', sans-serif;
+ 
     color :#000000;
 }
 .view-idea-container {
@@ -118,10 +124,13 @@ table {
     /*overflow-y: scroll;
         height: 600px;*/
 }
+body{
+font: 16px monospace;
 
+}
 .idea-container {
-    background-color: #9BDBDE;
-    border: solid;
+    background-color: gainsboro;
+    border: thin;
     border-width: 2px;
     border-color: #0094BC;
     border-radius: 10px;
@@ -145,7 +154,7 @@ table {
     height: 70px;
     overflow: hidden;
     word-break: break-word;
-    background-color: #FFFFFF;
+   
     border: none;
 }
 
@@ -155,6 +164,13 @@ table {
     padding: 3px;
 }
 
+.TFtable tr:nth-child(odd){ 
+    background: lightgray;
+}
+
+.TFtable tr:nth-child(even){
+    background: #CBCBCB;
+}
 .idea-container .idea-details-container .submit-by {
     color: #0094BC;
 }
@@ -165,7 +181,7 @@ table {
     width: 200px;
     /*margin-top: 60px;*/
     height: auto;
-    background-color: #9BDBDE;
+    background-color: lightgray;
     padding-left: 30px;
     padding-bottom: 20px;
     border-radius: 10px;

@@ -1,5 +1,5 @@
 <?php
-
+App::uses('ConnectionManager', 'Model');
 App::uses('AppController', 'Controller');
 App::uses('Security', 'Utility');
 App::uses('CakeEmail', 'Network/Email');
@@ -7,6 +7,20 @@ App::uses('CakeEmail', 'Network/Email');
 class UserController extends AppController {
     /* display terms and condition page */
 
+    public function displayGroupProfileToUser(){
+        $this->layout = '';
+                
+        $group_id = trim($this->request->data['group_id']);
+        $group_name = trim($this->request->data['group_name']);
+        
+        echo '<pre>';
+        print_r($group_id);
+        print_r($group_name);die();
+        //session
+        CakeSession::write('group_id', $group_id);
+        CakeSession::write('group_name', $group_name);
+        $this->redirect('../Pages/group_page');
+    }
     public function termsandcondition() {
         
     }
@@ -41,11 +55,12 @@ class UserController extends AppController {
 
         $joinGroupRequest = $this->JoinGroup->find('all', array(
             'conditions' => array('user_id' => $session_user_id),
-            'fields' => array('group_name', 'status')));
+            'fields' => array('group_id','group_name', 'status')));
 //        
 //        $joinGroupRequest = $this->JoinGroup->find(array('fields' => array('JoinGroup.group_code'=> array(
 //        'conditions' => array('user_id' => $session_user_id)))));
 
+        
         $this->set('joinGroupRequest', $joinGroupRequest);
 
         //display dropdown list of groupname
@@ -54,28 +69,21 @@ class UserController extends AppController {
 
         $findUserJoinedGroup = $this->JoinGroup->find('all', array('fields' => array('group_id'),
             'conditions' => array('user_id' => $session_user_id)));
-        $groupIdList = '';
-        foreach ($findUserJoinedGroup AS $value) {
-
-            if (!empty($groupIdList)) {
-                $groupIdList = $groupIdList . ',' . trim($value['JoinGroup']['group_id']);
-            } else {
-                $groupIdList = trim($value['JoinGroup']['group_id']);
+        
+        $inClausStr = '(';
+        
+        if ($findUserJoinedGroup) {
+            foreach ($findUserJoinedGroup AS $val) {
+               $inClausStr.="'" . trim($val['JoinGroup']['group_id']) . "',";
             }
+        } else {
+            $inClausStr.="''";
         }
-//        $group_info = $this->GetRegisteredGroupData->find('all', array(
-//            'conditions' => array('group_status' => 'open')));
-        $opts = array(
-            'conditions' => array(
-                'NOT' => array('group_id' => $groupIdList),
-                'group_status' => 'open'));
-        $group_info = $this->GetRegisteredGroupData->find('all', $opts);
 
-//        echo '<pre>';
-//        print_r($groupIdList);
-//        print_r($group_info);
-//        die(); 
-
+        $inClausStr = trim($inClausStr, ",");
+        $inClausStr.=')';
+                
+        $group_info = $this->GetRegisteredGroupData->query("select * from create_group where group_id NOT IN ".$inClausStr."");
         $this->set('groupInfo', $group_info);
     }
 
@@ -222,8 +230,10 @@ class UserController extends AppController {
             $session_userName = CakeSession::read('session_name');
             $sesion_userEmailId = CakeSession::read('session_email');
             $group_id = trim($this->request->data['group_id']);
+            
             $groupInfo = $this->CreateGroup->find('first', array(
                 'conditions' => array('CreateGroup.group_id' => $group_id)));
+           
             $group_name = $groupInfo['CreateGroup']['group_name'];
             $group_code = $groupInfo['CreateGroup']['group_code'];
             $status = 'sent';

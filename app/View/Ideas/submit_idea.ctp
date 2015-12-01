@@ -11,10 +11,10 @@
     <header>
         <h3>Submit Idea</h3>
         <?php echo $this->element('../Pages/header1'); ?>
-    </header>
-    <table width="100%" border="1">
+    </header><br>
+    <table>
         <tr valign="top">
-            <td bgcolor="#9BDBDE">
+            <td bgcolor="lightgrey">
                 <div align="left">
 
                     <form name="sibmitIdea" action="submitIdea" method="post">
@@ -48,11 +48,11 @@
                                 <?php endforeach; ?>
                             </select>
                         </div><br>
-                        <div class="button" style="margin-left: auto; margin-right: auto;">
+                        <div style="margin-left: auto; margin-right: auto;">
                             <input type="checkbox" name="idea_status" value="private">Confidential
                         </div><br>
-                        <div class="button" style="margin-left: auto; margin-right: auto;">
-                            <input class="buttonclass" type="submit" value="Save">
+                        <div style="margin-left: auto; margin-right: auto;">
+                            <input class="buttonclass" type="submit" value="Submit">
                         </div>
                     </form>
                 </div></td></table>
